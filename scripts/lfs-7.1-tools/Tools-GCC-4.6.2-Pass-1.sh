@@ -1,0 +1,54 @@
+PACKAGE='gcc-4.6.2.tar'
+
+prepare_commands()
+{ :
+	tar -jxvf ../mpfr-3.1.0.tar.bz2
+	mv -v mpfr-3.1.0 mpfr
+	tar -Jxvf ../gmp-5.0.4.tar.xz
+	mv -v gmp-5.0.4 gmp
+	tar -zxvf ../mpc-0.9.tar.gz
+	mv -v mpc-0.9 mpc
+}
+
+patch_commands()
+{ :
+	patch -Np1 -i ../gcc-4.6.2-cross_compile-1.patch
+}
+
+configure_commands()
+{ :
+	mkdir -pv ../gcc-build
+	cd ../gcc-build
+	../gcc-4.6.2/configure \
+		--target=$LFS_TGT --prefix=/tmp/tools \
+		--disable-nls --disable-shared --disable-multilib \
+		--disable-decimal-float --disable-threads \
+		--disable-libmudflap --disable-libssp \
+		--disable-libgomp --disable-libquadmath \
+	        --disable-target-libiberty --disable-target-zlib \
+		--enable-languages=c --without-ppl --without-cloog \
+		--with-mpfr-include=$(pwd)/../gcc-4.6.2/mpfr/src \
+		--with-mpfr-lib=$(pwd)/mpfr/src/.libs
+	
+}
+
+make_commands()
+{ :
+	cd ../gcc-build
+	make
+}
+
+install_commands()
+{ :
+	cd ../gcc-build
+	make install
+	ln -sfv libgcc.a `$LFS_TGT-gcc -print-libgcc-file-name | \
+		sed 's/libgcc/&_eh/'`
+}
+
+clean_commands()
+{ :
+	rm -rf ../gcc-build || exit 1
+}
+
+run_command unpack prepare patch configure make install clean

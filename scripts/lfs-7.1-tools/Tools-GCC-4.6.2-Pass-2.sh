@@ -1,0 +1,88 @@
+PACKAGE='gcc-4.6.2.tar'
+
+patch_commands()
+{ :
+	patch -Np1 -i ../gcc-4.6.2-startfiles_fix-1.patch
+}
+
+prepare_commands()
+{ :
+	cp -v gcc/Makefile.in{,.orig}
+	sed 's@\./fixinc\.sh@-c true@' gcc/Makefile.in.orig > gcc/Makefile.in
+
+	cp -v gcc/Makefile.in{,.tmp}
+	sed 's/^T_CFLAGS =$/& -fomit-frame-pointer/' gcc/Makefile.in.tmp \
+		> gcc/Makefile.in
+
+	for file in \
+		$(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
+	do
+	  cp -uv $file{,.orig}
+	  sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tmp/tools&@g' \
+	      -e 's@/usr@/tmp/tools@g' $file.orig > $file
+       	  echo '
+#undef STANDARD_INCLUDE_DIR
+#define STANDARD_INCLUDE_DIR 0
+#define STANDARD_STARTFILE_PREFIX_1 ""
+#define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
+          touch $file.orig
+	done
+
+	case $(uname -m) in
+	  x86_64)
+	      for file in $(find gcc/config -name t-linux64) ; do \
+		cp -v $file{,.orig}
+    	        sed '/MULTILIB_OSDIRNAMES/d' $file.orig > $file
+	      done
+	  ;;
+	esac
+
+	tar -jxvf ../mpfr-3.1.0.tar.bz2
+	mv -v mpfr-3.1.0 mpfr
+	tar -Jxvf ../gmp-5.0.4.tar.xz
+	mv -v gmp-5.0.4 gmp
+	tar -zxvf ../mpc-0.9.tar.gz
+	mv -v mpc-0.9 mpc
+}
+
+configure_commands()
+{ :
+	mkdir -pv ../gcc-build
+	cd ../gcc-build
+	CC="$LFS_TGT-gcc -B/tmp/tools/lib/" \
+	    AR=$LFS_TGT-ar RANLIB=$LFS_TGT-ranlib \
+	    ../gcc-4.6.2/configure --prefix=/tmp/tools \
+	    --with-local-prefix=/tmp/tools --enable-clocale=gnu \
+	    --enable-shared --enable-threads=posix \
+	    --enable-__cxa_atexit --enable-languages=c,c++ \
+	    --disable-libstdcxx-pch --disable-multilib \
+	    --disable-bootstrap --disable-libgomp \
+	    --without-ppl --without-cloog \
+	    --with-mpfr-include=$(pwd)/../gcc-4.6.2/mpfr/src \
+	    --with-mpfr-lib=$(pwd)/mpfr/src/.libs    
+}
+
+make_commands()
+{ :
+	cd ../gcc-build
+	make
+}
+
+install_commands()
+{ :
+	cd ../gcc-build
+	make install
+
+	ln -fvs gcc /tmp/tools/bin/cc
+	echo 'main(){}' > /tmp/dummy.c
+	$LFS_TGT-gcc -B/tmp/tools/lib /tmp/dummy.c -o /tmp/a.out
+	readelf -l /tmp/a.out | grep ': /tmp/tools'
+}
+
+clean_commands()
+{ :
+	rm -rf ../gcc-build || exit 1
+	rm -f /tmp/dummy.c /tmp/a.out
+}
+
+run_command unpack patch prepare configure make install clean

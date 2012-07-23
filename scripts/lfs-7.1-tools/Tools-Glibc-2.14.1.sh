@@ -1,0 +1,40 @@
+PACKAGE='glibc-2.14.1.tar'
+
+patch_commands()
+{ :
+	patch -Np1 -i ../glibc-2.14.1-gcc_fix-1.patch
+	patch -Np1 -i ../glibc-2.14.1-cpuid-1.patch
+}
+
+configure_commands()
+{ :
+	mkdir -v ../glibc-build
+	cd ../glibc-build
+	case `uname -m` in
+		i?86) echo "CFLAGS += -march=i486 -mtune=native" > configparms ;;
+	esac
+	../glibc-2.14.1/configure --prefix=/tmp/tools \
+		--host=$LFS_TGT --build=$(../glibc-2.14.1/scripts/config.guess) \
+		--disable-profile --enable-add-ons \
+		--enable-kernel=2.6.25 --with-headers=/tmp/tools/include \
+		libc_cv_forced_unwind=yes libc_cv_c_cleanup=yes
+}
+
+make_commands()
+{ :
+	cd ../glibc-build
+	make
+}
+
+install_commands()
+{ :
+	cd ../glibc-build
+	make install
+}
+
+clean_commands()
+{ :
+	rm -rf ../glibc-build
+}
+
+run_command unpack patch configure make install clean
