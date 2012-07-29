@@ -12,7 +12,7 @@ make_commands()
 
 check_commands()
 { :
-#	make check
+	make check
 }
 
 install_commands()
