@@ -1,0 +1,23 @@
+PACKAGE='check-0.9.8'
+
+configure_commands()
+{ :
+	./configure --prefix=$TOOLS
+}
+
+make_commands()
+{ :
+	make
+}
+
+check_commands()
+{ :
+	make check
+}
+
+install_commands()
+{ :
+	make install
+}
+
+run_command unpack configure make check install clean

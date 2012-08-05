@@ -1,8 +1,8 @@
-PACKAGE='check-0.9.8'
+PACKAGE='example-1.0'
 
 configure_commands()
 { :
-	./configure --prefix=/tmp/tools
+	./configure --prefix=$TOOLS
 }
 
 make_commands()

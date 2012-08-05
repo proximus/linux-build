@@ -4,10 +4,10 @@ configure_commands()
 { :
 	mkdir -pv ../binutils-build
 	cd ../binutils-build
-	CC="$LFS_TGT-gcc -B/tmp/tools/lib/" \
+	CC="$LFS_TGT-gcc -B$TOOLS/lib/" \
 		AR=$LFS_TGT-ar RANLIB=$LFS_TGT-ranlib \
-		../binutils-2.22/configure --prefix=/tmp/tools \
-		--disable-nls --with-lib-path=/tmp/tools/lib
+		../binutils-2.22/configure --prefix=$TOOLS \
+		--disable-nls --with-lib-path=$TOOLS/lib
 }
 
 make_commands()
@@ -22,7 +22,7 @@ install_commands()
 	make install
 	make -C ld clean
 	make -C ld LIB_PATH=/usr/lib:/lib
-	cp -v ld/ld-new /tmp/tools/bin
+	cp -v ld/ld-new $TOOLS/bin
 }
 
 clean_commands()

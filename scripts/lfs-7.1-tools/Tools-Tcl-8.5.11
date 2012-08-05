@@ -3,7 +3,7 @@ PACKAGE='tcl8.5.11-src'
 configure_commands()
 { :
 	cd unix
-	./configure --prefix=/tmp/tools
+	./configure --prefix=$TOOLS
 }
 
 make_commands()
@@ -22,9 +22,9 @@ install_commands()
 { :
 	cd unix
 	make install
-	chmod -v u+w /tmp/tools/lib/libtcl8.5.so
+	chmod -v u+w $TOOLS/lib/libtcl8.5.so
 	make install-private-headers
-	ln -sfv tclsh8.5 /tmp/tools/bin/tclsh
+	ln -sfv tclsh8.5 $TOOLS/bin/tclsh
 }
 
 run_command unpack configure make check install clean

@@ -1,0 +1,22 @@
+PACKAGE='gettext-0.18.1.1'
+
+configure_commands()
+{ :
+	cd gettext-tools
+	./configure --prefix=$TOOLS --disable-shared
+}
+
+make_commands()
+{ :
+	cd gettext-tools
+	make -C gnulib-lib
+	make -C src msgfmt
+}
+
+install_commands()
+{ :
+	cd gettext-tools
+	cp -v src/msgfmt $TOOLS/bin
+}
+
+run_command unpack configure make install clean

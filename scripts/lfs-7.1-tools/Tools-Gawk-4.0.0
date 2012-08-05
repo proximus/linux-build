@@ -1,0 +1,24 @@
+PACKAGE='gawk-4.0.0'
+
+configure_commands()
+{ :
+	./configure --prefix=$TOOLS
+}
+
+make_commands()
+{ :
+	make
+}
+
+check_commands()
+{ :
+	# Parallel make check fails. Disable it.
+	MAKEFLAGS='-j 1' make check
+}
+
+install_commands()
+{ :
+	make install
+}
+
+run_command unpack configure make check install clean

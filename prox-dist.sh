@@ -9,8 +9,8 @@ DIR=$( cd "$( dirname "$0" )" && pwd )
 SCRIPTS="$DIR"/scripts
 
 [ $# -eq 0 ] && {
-	echo "Usage: $0 config-filename"
-	echo "Example: ./prox-dist.sh conf/lfs-7.1-tools.cfg"
+	echo "Example:"
+	echo "$0 conf/lfs-7.1-tools.cfg"
        	exit 1;
 }
 
@@ -21,11 +21,14 @@ setup_environment "$DIR"
 mkdir -pv "$LFS"/{tmp/tools,usr/src/sources}
 SOURCES="$LFS"/usr/src/sources
 
-# Create /tmp/tools symlink on the host system. This will point to the
+# Make TOOLS variable available in build environment.
+export TOOLS=/tmp/tools
+
+# Create TOOLS symlink on the host system. This will point to the
 # newly-created directory on the LFS partition.
-if [ ! -L /tmp/tools ]; then
-	echo "Creating /tmp/tools link"
-	ln -svnf "$LFS"/tmp/tools /tmp
+if [ ! -L $TOOLS ]; then
+	echo "Creating $TOOLS link"
+	ln -svnf $LFS$TOOLS /tmp
 fi
 
 # Read config file and start building.
@@ -38,7 +41,7 @@ for line in `cat "$CONFIG_FILE"`; do
 	[[ "$line" = \#* ]] && continue
 
 	# Get the name of the script.
-	script="${line##*/}"; script="${script%.sh}" 
+	script="${line##*/}"
 	# Set the log directory.
 	LOGDIR="$SOURCES"/log/"$script" && mkdir -p "$LOGDIR" || exit 1
 

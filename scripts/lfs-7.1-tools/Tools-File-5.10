@@ -1,8 +1,8 @@
-PACKAGE='gzip-1.4'
+PACKAGE='file-5.10'
 
 configure_commands()
 { :
-	./configure --prefix=/tmp/tools
+	./configure --prefix=$TOOLS
 }
 
 make_commands()

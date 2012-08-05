@@ -13,10 +13,10 @@ configure_commands()
 	case `uname -m` in
 		i?86) echo "CFLAGS += -march=i486 -mtune=native" > configparms ;;
 	esac
-	../glibc-2.14.1/configure --prefix=/tmp/tools \
+	../glibc-2.14.1/configure --prefix=$TOOLS \
 		--host=$LFS_TGT --build=$(../glibc-2.14.1/scripts/config.guess) \
 		--disable-profile --enable-add-ons \
-		--enable-kernel=2.6.25 --with-headers=/tmp/tools/include \
+		--enable-kernel=2.6.25 --with-headers=$TOOLS/include \
 		libc_cv_forced_unwind=yes libc_cv_c_cleanup=yes
 }
 

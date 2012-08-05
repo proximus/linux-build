@@ -20,7 +20,7 @@ configure_commands()
 	mkdir -pv ../gcc-build
 	cd ../gcc-build
 	../gcc-4.6.2/configure \
-		--target=$LFS_TGT --prefix=/tmp/tools \
+		--target=$LFS_TGT --prefix=$TOOLS \
 		--disable-nls --disable-shared --disable-multilib \
 		--disable-decimal-float --disable-threads \
 		--disable-libmudflap --disable-libssp \

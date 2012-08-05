@@ -5,7 +5,7 @@ configure_commands()
 	mkdir -pv ../binutils-build
 	cd ../binutils-build
 	../binutils-2.22/configure \
-		--target=$LFS_TGT --prefix=/tmp/tools \
+		--target=$LFS_TGT --prefix=$TOOLS \
 		--disable-nls --disable-werror
 }
 
@@ -14,7 +14,7 @@ make_commands()
 	cd ../binutils-build
 	make
 	case $(uname -m) in
-		x86_64) mkdir -pv /tmp/tools/lib && ln -svnf lib /tmp/tools/lib64 ;;
+		x86_64) mkdir -pv $TOOLS/lib && ln -svnf lib $TOOLS/lib64 ;;
 	esac
 }
 

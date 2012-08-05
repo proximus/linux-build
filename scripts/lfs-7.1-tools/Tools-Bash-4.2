@@ -1,0 +1,29 @@
+PACKAGE='bash-4.2.tar'
+
+patch_commands()
+{ :
+	patch -Np1 -i ../bash-4.2-fixes-4.patch
+}
+
+configure_commands()
+{ :
+	./configure --prefix=$TOOLS --without-bash-malloc
+}
+
+make_commands()
+{ :
+	make
+}
+
+check_commands()
+{ :
+	make tests
+}
+
+install_commands()
+{ :
+	make install
+	ln -sfv bash $TOOLS/bin/sh
+}
+
+run_command unpack patch configure make check install clean

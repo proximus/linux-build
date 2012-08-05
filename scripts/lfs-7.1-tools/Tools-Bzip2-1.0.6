@@ -1,0 +1,13 @@
+PACKAGE='bzip2-1.0.6.tar'
+
+make_commands()
+{ :
+	make
+}
+
+install_commands()
+{ :
+	make PREFIX=$TOOLS install
+}
+
+run_command unpack make install clean

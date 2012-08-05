@@ -18,8 +18,8 @@ prepare_commands()
 		$(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
 	do
 	  cp -uv $file{,.orig}
-	  sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tmp/tools&@g' \
-	      -e 's@/usr@/tmp/tools@g' $file.orig > $file
+	  sed -e "s@/lib\(64\)\?\(32\)\?/ld@$TOOLS&@g" \
+	      -e "s@/usr@$TOOLS@g" $file.orig > $file
        	  echo '
 #undef STANDARD_INCLUDE_DIR
 #define STANDARD_INCLUDE_DIR 0
@@ -49,10 +49,10 @@ configure_commands()
 { :
 	mkdir -pv ../gcc-build
 	cd ../gcc-build
-	CC="$LFS_TGT-gcc -B/tmp/tools/lib/" \
+	CC="$LFS_TGT-gcc -B$TOOLS/lib/" \
 	    AR=$LFS_TGT-ar RANLIB=$LFS_TGT-ranlib \
-	    ../gcc-4.6.2/configure --prefix=/tmp/tools \
-	    --with-local-prefix=/tmp/tools --enable-clocale=gnu \
+	    ../gcc-4.6.2/configure --prefix=$TOOLS \
+	    --with-local-prefix=$TOOLS --enable-clocale=gnu \
 	    --enable-shared --enable-threads=posix \
 	    --enable-__cxa_atexit --enable-languages=c,c++ \
 	    --disable-libstdcxx-pch --disable-multilib \
@@ -73,10 +73,10 @@ install_commands()
 	cd ../gcc-build
 	make install
 
-	ln -fvs gcc /tmp/tools/bin/cc
+	ln -fvs gcc $TOOLS/bin/cc
 	echo 'main(){}' > /tmp/dummy.c
-	$LFS_TGT-gcc -B/tmp/tools/lib /tmp/dummy.c -o /tmp/a.out
-	readelf -l /tmp/a.out | grep ': /tmp/tools'
+	$LFS_TGT-gcc -B$TOOLS/lib /tmp/dummy.c -o /tmp/a.out
+	readelf -l /tmp/a.out | grep ": $TOOLS"
 }
 
 clean_commands()

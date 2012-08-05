@@ -17,7 +17,7 @@ make_commands()
 
 install_commands()
 { :
-	cp -rv dest/include/* /tmp/tools/include
+	cp -rv dest/include/* $TOOLS/include
 }
 
 run_command unpack configure check make install clean

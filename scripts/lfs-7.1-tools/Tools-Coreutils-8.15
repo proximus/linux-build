@@ -1,0 +1,24 @@
+PACKAGE='coreutils-8.15.tar'
+
+configure_commands()
+{ :
+	./configure --prefix=$TOOLS --enable-install-program=hostname
+}
+
+make_commands()
+{ :
+	make
+}
+
+check_commands()
+{ :
+	make RUN_EXPENSIVE_TESTS=yes check
+}
+
+install_commands()
+{ :
+	make install
+	cp -v src/su $TOOLS/bin/su-tools
+}
+
+run_command unpack configure make check install clean

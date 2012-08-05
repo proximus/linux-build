@@ -1,0 +1,19 @@
+PACKAGE='ncurses-5.9'
+
+configure_commands()
+{ :
+	./configure --prefix=$TOOLS --with-shared \
+		    --without-debug --without-ada --enable-overwrite
+}
+
+make_commands()
+{ :
+	make
+}
+
+install_commands()
+{ :
+	make install
+}
+
+run_command unpack configure make install clean

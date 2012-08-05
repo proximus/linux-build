@@ -4,8 +4,8 @@ configure_commands()
 { :
 	cp -v configure{,.orig}
 	sed 's:/usr/local/bin:/bin:' configure.orig > configure
-	./configure --prefix=/tmp/tools --with-tcl=/tmp/tools/lib \
-		    --with-tclinclude=/tmp/tools/include
+	./configure --prefix=$TOOLS --with-tcl=$TOOLS/lib \
+		    --with-tclinclude=$TOOLS/include
 }
 
 make_commands()
