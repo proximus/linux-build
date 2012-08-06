@@ -1,6 +1,6 @@
 PACKAGE=''
 
-run_commands()
+plain_commands()
 { :
 	SPECS=`dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/specs
 	$LFS_TGT-gcc -dumpspecs | sed \
@@ -19,4 +19,4 @@ clean_commands()
 	rm -f /tmp/dummy.c /tmp/a.out
 }
 
-run_command run clean
+run_command plain clean

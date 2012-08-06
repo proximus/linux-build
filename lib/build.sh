@@ -103,10 +103,11 @@ while [ -n "$1" ]; do
         test_pipe
         ;;
 
-    _run)
-        print_me $field_width "Running commands"
+	# Function will execute commands without knowing about the pkg_srcdir.
+    _plain)
+        print_me $field_width "Executing plain shell commands"
 
-        { run_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/run.err" ;} &>"$LOGDIR/run.log"
+        { plain_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/run.err" ;} &>"$LOGDIR/run.log"
         test_pipe
         ;;
 

@@ -1,23 +1,10 @@
-PACKAGE='example-1.0'
+PACKAGE=''
 
-configure_commands()
+plain_commands()
 { :
-	./configure --prefix=$TOOLS
+	strip --strip-debug $TOOLS/lib/*
+	strip --strip-unneeded $TOOLS/{,s}bin/*	
+	rm -rvf $TOOLS/{,share}/{info,man,doc}
 }
 
-make_commands()
-{ :
-	make
-}
-
-check_commands()
-{ :
-	make check
-}
-
-install_commands()
-{ :
-	make install
-}
-
-run_command unpack configure make check install clean
+run_command plain

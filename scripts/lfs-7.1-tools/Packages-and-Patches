@@ -4,7 +4,7 @@ PACKAGE=''
 WGET_URLS="$DIR"/scripts/wget-list-lfs-7.1
 
 # Download all sources.
-run_commands()
+plain_commands()
 { :
 	# Quit if SOURCES directory does not exists
 	if [ ! -d "$SOURCES" ]; then
@@ -23,4 +23,4 @@ run_commands()
 	popd
 }
 
-run_command run
+run_command plain

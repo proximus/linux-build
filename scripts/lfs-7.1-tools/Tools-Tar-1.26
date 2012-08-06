@@ -1,4 +1,4 @@
-PACKAGE='example-1.0'
+PACKAGE='tar-1.26'
 
 configure_commands()
 { :

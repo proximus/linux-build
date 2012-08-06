@@ -1,4 +1,4 @@
-PACKAGE='example-1.0'
+PACKAGE='make-3.82'
 
 configure_commands()
 { :

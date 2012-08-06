@@ -1,4 +1,4 @@
-PACKAGE='example-1.0'
+PACKAGE='m4-1.4.16'
 
 configure_commands()
 { :

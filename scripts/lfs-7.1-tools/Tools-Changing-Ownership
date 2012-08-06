@@ -1,0 +1,8 @@
+PACKAGE=''
+
+plain_commands()
+{ :
+	chown -R root:root $LFS/$TOOLS
+}
+
+run_command plain
