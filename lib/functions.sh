@@ -1,5 +1,5 @@
 # Function will setup a good working environment.
-# Args: $DIR
+# ARGS: CPUS
 function setup_environment()
 {
 	# Uset each variable and only keep he necessary ones.
@@ -9,14 +9,13 @@ function setup_environment()
 	set +h
 	umask 022
 
-	LFS=$1/lfs
 	LC_ALL=POSIX
 	LFS_TGT=$(uname -m)-proximus-linux-gnu
-	PATH=$LFS/tmp/tools/bin:/bin:/usr/bin
+	PATH=$LFS$TOOLS/bin:/bin:/usr/bin
 	PS1='\u:\w\$ '
-	MAKEFLAGS='-j 4'
+	MAKEFLAGS="-j $CPUS"
 
-	export LFS LC_ALL LFS_TGT PATH PS1 MAKEFLAGS
+	export LFS TOOLS LC_ALL LFS_TGT PATH PS1 MAKEFLAGS
 }
 
 # Function with customized print.
