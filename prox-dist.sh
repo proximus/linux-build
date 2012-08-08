@@ -6,7 +6,6 @@ source lib/functions.sh
 
 CONFIG_FILE=$1
 DIR=$( cd "$( dirname "$0" )" && pwd )
-SCRIPTS="$DIR"/scripts
 
 [ $# -eq 0 ] && {
 	echo "Example:"
@@ -18,18 +17,11 @@ SCRIPTS="$DIR"/scripts
 setup_environment "$DIR"
 
 # Create LFS directories
-mkdir -pv "$LFS"/{tmp/tools,usr/src/sources}
+mkdir -pv "$LFS"/{,usr/src/sources}
 SOURCES="$LFS"/usr/src/sources
 
 # Make TOOLS variable available in build environment.
 export TOOLS=/tmp/tools
-
-# Create TOOLS symlink on the host system. This will point to the
-# newly-created directory on the LFS partition.
-if [ ! -L $TOOLS ]; then
-	echo "Creating $TOOLS link"
-	ln -svnf $LFS$TOOLS /tmp
-fi
 
 # Read config file and start building.
 o_IFS=$IFS
@@ -46,10 +38,10 @@ for line in `cat "$CONFIG_FILE"`; do
 	LOGDIR="$SOURCES"/log/"$script" && mkdir -p "$LOGDIR" || exit 1
 
 	# Print the script.
-        echo "================================================================================"
-	echo "Executing: $(eval echo $line)"
-	echo "Log dir: ${LOGDIR}"
-        echo "================================================================================"
+    echo "================================================================================"
+    echo "Executing: $(eval echo $line)"
+    echo "Log dir: ${LOGDIR}"
+    echo "================================================================================"
 
 	# Run the build libraries.
 	source "$DIR"/lib/build.sh

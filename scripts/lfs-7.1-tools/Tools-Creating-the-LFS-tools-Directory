@@ -1,0 +1,10 @@
+PACKAGE=''
+
+# Create and link the LFS/TOOLS directory
+plain_commands()
+{ :
+    mkdir -pv $LFS$TOOLS
+    ln -svnf $LFS$TOOLS $TOOLS
+}
+
+run_command plain
