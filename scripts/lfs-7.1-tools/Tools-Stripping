@@ -2,8 +2,8 @@ PACKAGE=''
 
 plain_commands()
 { :
-	strip --strip-debug $TOOLS/lib/*
-	strip --strip-unneeded $TOOLS/{,s}bin/*	
+	find $TOOLS/lib/* -type f -executable -exec strip -v --strip-debug {} \;
+	find $TOOLS/{,s}bin/* -type f -executable -exec strip -v --strip-unneeded {} \;
 	rm -rvf $TOOLS/{,share}/{info,man,doc}
 }
 
