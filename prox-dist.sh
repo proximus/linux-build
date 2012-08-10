@@ -10,7 +10,7 @@ DIR=$( cd "$( dirname "$0" )" && pwd )
 [ $# -eq 0 ] && {
     echo "Example:"
     echo "$0 conf/lfs-7.1-tools.cfg"
-        exit 1;
+    exit 1;
 }
 
 # Set the LFS variable
