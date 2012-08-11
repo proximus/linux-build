@@ -7,6 +7,10 @@ plain_commands()
 	wget_urls=(
 		http://ftp.gnu.org/gnu/binutils/binutils-2.22.tar.bz2
 		http://ftp.gnu.org/gnu/gcc/gcc-4.6.2/gcc-4.6.2.tar.bz2
+		http://www.mpfr.org/mpfr-3.1.0/mpfr-3.1.0.tar.bz2
+		http://ftp.gnu.org/gnu/gmp/gmp-5.0.4.tar.xz
+		http://www.multiprecision.org/mpc/download/mpc-0.9.tar.gz
+
 		http://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.6.tar.xz
 		http://ftp.gnu.org/gnu/glibc/glibc-2.14.1.tar.bz2
 		http://prdownloads.sourceforge.net/tcl/tcl8.5.11-src.tar.gz
@@ -44,6 +48,9 @@ plain_commands()
 	packages=(
 		binutils-2.22.tar.bz2
 		gcc-4.6.2.tar.bz2
+		mpfr-3.1.0.tar.bz2
+		gmp-5.0.4.tar.xz
+		mpc-0.9.tar.gz
 		linux-3.2.6.tar.xz
 		glibc-2.14.1.tar.bz2
 		tcl8.5.11-src.tar.gz
@@ -81,6 +88,9 @@ plain_commands()
 	md5_sums=(
 		ee0f10756c84979622b992a4a61ea3f5
 		028115c4fbfb6cfd75d6369f4a90d87e
+		238ae4a15cc3a5049b723daef5d17938
+		0881f4ff2617226c673fc534ac39d448
+		0d6acab8d214bd7d1fbbc593e83dd00d
 		b50e258e601a428d13bdcc9ae35f8340
 		5869a2620c6917dd392289864c6ce595
 		b01a9691c83990b3db0ce62d1012ca67
