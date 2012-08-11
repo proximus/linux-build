@@ -43,11 +43,11 @@ for line in `cat "$CONFIG_FILE"`; do
     # Get the name of the script
     script="${line##*/}"
     # Set the log directory
-    LOGDIR="$SOURCES"/log/"$script" && mkdir -p "$LOGDIR" || exit 1
+    LOGDIR="$SOURCES/log/$script" && mkdir -p "$LOGDIR" || exit 1
 
     # Print the script
     echo "================================================================================"
-    echo "Executing: $(eval echo $line)"
+    echo "Running: $(eval echo $line)"
     echo "Log dir: ${LOGDIR}"
     echo "================================================================================"
 
