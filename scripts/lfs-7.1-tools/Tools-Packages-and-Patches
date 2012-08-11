@@ -1,0 +1,146 @@
+PACKAGE=''
+
+# Download all sources.
+plain_commands()
+{ :
+	# Define urls to source packages and patches needed to build Tools LFS.
+	wget_urls=(
+		http://ftp.gnu.org/gnu/binutils/binutils-2.22.tar.bz2
+		http://ftp.gnu.org/gnu/gcc/gcc-4.6.2/gcc-4.6.2.tar.bz2
+		http://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.6.tar.xz
+		http://ftp.gnu.org/gnu/glibc/glibc-2.14.1.tar.bz2
+		http://prdownloads.sourceforge.net/tcl/tcl8.5.11-src.tar.gz
+		http://prdownloads.sourceforge.net/expect/expect5.45.tar.gz
+		http://ftp.gnu.org/gnu/dejagnu/dejagnu-1.5.tar.gz
+		http://sourceforge.net/projects/check/files/check/0.9.8/check-0.9.8.tar.gz
+		ftp://ftp.gnu.org/gnu/ncurses/ncurses-5.9.tar.gz
+		http://ftp.gnu.org/gnu/bash/bash-4.2.tar.gz
+		http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz
+		http://ftp.gnu.org/gnu/coreutils/coreutils-8.15.tar.xz
+		http://ftp.gnu.org/gnu/diffutils/diffutils-3.2.tar.gz
+		ftp://ftp.astron.com/pub/file/file-5.10.tar.gz
+		http://ftp.gnu.org/gnu/findutils/findutils-4.4.2.tar.gz
+		http://ftp.gnu.org/gnu/gawk/gawk-4.0.0.tar.bz2
+		http://ftp.gnu.org/gnu/gettext/gettext-0.18.1.1.tar.gz
+		http://ftp.gnu.org/gnu/grep/grep-2.10.tar.xz
+		http://ftp.gnu.org/gnu/gzip/gzip-1.4.tar.gz
+		http://ftp.gnu.org/gnu/m4/m4-1.4.16.tar.bz2
+		http://ftp.gnu.org/gnu/make/make-3.82.tar.bz2
+		http://ftp.gnu.org/gnu/patch/patch-2.6.1.tar.bz2
+		http://www.cpan.org/src/5.0/perl-5.14.2.tar.bz2
+		http://ftp.gnu.org/gnu/sed/sed-4.2.1.tar.bz2
+		http://ftp.gnu.org/gnu/tar/tar-1.26.tar.bz2
+		http://ftp.gnu.org/gnu/texinfo/texinfo-4.13a.tar.gz
+		http://tukaani.org/xz/xz-5.0.3.tar.bz2
+		http://www.linuxfromscratch.org/patches/lfs/7.1/gcc-4.6.2-cross_compile-1.patch
+		http://www.linuxfromscratch.org/patches/lfs/7.1/glibc-2.14.1-gcc_fix-1.patch
+		http://www.linuxfromscratch.org/patches/lfs/7.1/glibc-2.14.1-cpuid-1.patch
+		http://www.linuxfromscratch.org/patches/lfs/7.1/gcc-4.6.2-startfiles_fix-1.patch
+		http://www.linuxfromscratch.org/patches/lfs/7.1/bash-4.2-fixes-4.patch
+		http://www.linuxfromscratch.org/patches/lfs/7.1/perl-5.14.2-libc-1.patch
+	)
+
+	# Define packages and patches needed to build Tools LFS.
+	packages=(
+		binutils-2.22.tar.bz2
+		gcc-4.6.2.tar.bz2
+		linux-3.2.6.tar.xz
+		glibc-2.14.1.tar.bz2
+		tcl8.5.11-src.tar.gz
+		expect5.45.tar.gz
+		dejagnu-1.5.tar.gz
+		check-0.9.8.tar.gz
+		ncurses-5.9.tar.gz
+		bash-4.2.tar.gz
+		bzip2-1.0.6.tar.gz
+		coreutils-8.15.tar.xz
+		diffutils-3.2.tar.gz
+		file-5.10.tar.gz
+		findutils-4.4.2.tar.gz
+		gawk-4.0.0.tar.bz2
+		gettext-0.18.1.1.tar.gz
+		grep-2.10.tar.xz
+		gzip-1.4.tar.gz
+		m4-1.4.16.tar.bz2
+		make-3.82.tar.bz2
+		patch-2.6.1.tar.bz2
+		perl-5.14.2.tar.bz2
+		sed-4.2.1.tar.bz2
+		tar-1.26.tar.bz2
+		texinfo-4.13a.tar.gz
+		xz-5.0.3.tar.bz2
+		gcc-4.6.2-cross_compile-1.patch
+		glibc-2.14.1-gcc_fix-1.patch
+		glibc-2.14.1-cpuid-1.patch
+		gcc-4.6.2-startfiles_fix-1.patch
+		bash-4.2-fixes-4.patch
+		perl-5.14.2-libc-1.patch
+	)
+
+	# Define md5sum to verify healthy source code.
+	md5_sums=(
+		ee0f10756c84979622b992a4a61ea3f5
+		028115c4fbfb6cfd75d6369f4a90d87e
+		b50e258e601a428d13bdcc9ae35f8340
+		5869a2620c6917dd392289864c6ce595
+		b01a9691c83990b3db0ce62d1012ca67
+		44e1a4f4c877e9ddc5a542dfa7ecc92b
+		3df1cbca885e751e22d3ebd1ac64dc3c
+		5d75e9a6027cde79d2c339ef261e7470
+		8cb9c412e5f2d96bc6f459aa8c6282a1
+		3fb927c7c33022f1c327f14a81c0d4b0
+		00b516f4704d4a7cb50a1d97e6e8e15b
+		094909fafa86110140b32e4948941545
+		22e4deef5d8949a727b159d6bc65c1cc
+		4cea34b087b060772511e066e2038196
+		351cc4adb07d54877fa15f75fb77d39f
+		7cdc48e99b885a4bbe0e98dcf1706b22
+		3dd55b952826d2b32f51308f2f91aa89
+		709915434d09f5db655e5ebd7fd6bb7f
+		e381b8506210c794278f5527cba0e765
+		8a7cef47fecab6272eb86a6be6363b2f
+		1a11100f3c63fcf5753818e59d63088f
+		0818d1763ae0c4281bcdc63cdac0b2c0
+		04a4c5d3c1f9f19d77daff8e8cd19a26
+		7d310fbd76e01a01115075c1fd3f455a
+		2cee42a2ff4f1cd4f9298eeeb2264519
+		71ba711519209b5fb583fed2b3d86fcb
+		8d900b742b94fa9e708ca4f5a4b29003
+		1b7886a7a4df3a48617e88a481862264
+		d1f28cb98acb9417fe52596908bbb9fd
+		4f110dc9c8d4754fbda841492ce796b4
+		799ef1971350d2e3c794f2123f247cc6
+		244e3ff74d53792f1db32dea75dc8627
+		23682f20b6785e97f99d33be7719c9d6
+	)
+
+	echo "WGET_URLS:"
+	for i in ${!wget_urls[*]}; do
+		printf "%4d: %s\n" $i ${wget_urls[$i]}
+	done
+	echo "PACKAGES:"
+	for i in ${!packages[*]}; do
+		printf "%4d: %s\n" $i ${packages[$i]}
+	done
+	echo "MD5_SUMS:"
+	for i in ${!md5_sums[*]}; do
+		printf "%4d: %s\n" $i ${md5_sums[$i]}
+	done
+	# Create the SOURCES directory
+	mkdir -pv "$SOURCES"
+
+	# Make the SOURCES directory writable and sticky
+	chmod -v a+wt "$SOURCES"
+
+	# Download lfs packages to SOURCES directory
+	wget -nc ${wget_urls[*]} -P "$SOURCES"
+
+	# Check if lfs packages are healthy.
+	pushd  "$SOURCES"
+	for i in ${!md5_sums[*]}; do
+		echo "${md5_sums[$i]}  ${packages[$i]}" | md5sum -c
+	done
+	popd
+}
+
+run_command plain

@@ -25,9 +25,11 @@ CPUS=4
 # Setup the build environment and export shell variables
 setup_environment $NR_CPUS
 
-# Create LFS directories
-mkdir -pv "$LFS"/{,usr/src/sources}
-SOURCES="$LFS"/usr/src/sources
+# Create LFS directory
+mkdir -pv $LFS
+
+# Set the SOURCES variable
+SOURCES=$LFS/usr/src/sources
 
 # Read config file and start building
 o_IFS=$IFS
