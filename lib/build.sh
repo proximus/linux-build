@@ -13,7 +13,7 @@ unpack_commands()
 { :
     export pkg_srcdir=""
     cd "$SOURCES" || return 1
-  
+
     for p in $PACKAGE; do
         for archive in "$SOURCES"/*"$p"* ; do
             dir=""
@@ -29,7 +29,7 @@ unpack_commands()
             test -z "$pkg_srcdir" && pkg_srcdir=${dir%%/*}
         done
     done
-  
+
     test -z "$pkg_srcdir" && { echo 1>&2 "Source directory not found" ; return 1 ; }
     ln -snf "$pkg_srcdir" latest
 }
@@ -123,7 +123,7 @@ function run_command()
             echo 1>&2 "Unknown command '$1'"
             exit 1
         ;;
-        esac       
+        esac
         shift 1
     done
 }
