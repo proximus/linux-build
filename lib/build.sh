@@ -12,7 +12,7 @@ test_pipe()
 unpack_commands()
 { :
     export pkg_srcdir=""
-    cd "$SOURCES" || return 1
+    pushd "$SOURCES" > /dev/null || return 1
 
     for p in $PACKAGE; do
         for archive in "$SOURCES"/*"$p"* ; do
@@ -32,6 +32,7 @@ unpack_commands()
 
     test -z "$pkg_srcdir" && { echo 1>&2 "Source directory not found" ; return 1 ; }
     ln -snf "$pkg_srcdir" latest
+    popd > /dev/null
 }
 
 
@@ -42,11 +43,12 @@ function run_command()
     while [ -n "$1" ]; do
         case "_$1" in
         _check)
-            cd "$SOURCES/latest" && pkg_srcdir="$(pwd)" || exit 1
+            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
             print_me $field_width "Checking"
 
             { check_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/check.err" ;} &>"$LOGDIR/check.log"
             test_pipe
+	    popd > /dev/null
         ;;
 
         _clean)
@@ -57,51 +59,57 @@ function run_command()
             fi
 
             if [[ -h "$SOURCES/latest" && -n "$pkg_srcdir" ]]; then
-                cd "$SOURCES/latest"
+                pushd "$SOURCES/latest" > /dev/null
                 rm -rf "$(readlink -nf $pkg_srcdir)" || exit 1
                 cd ../ && rm -rf 'latest' || exit 1
             fi
             print_ok
+	    popd > /dev/null
         ;;
 
         _configure)
-            cd "$SOURCES/latest" && pkg_srcdir="$(pwd)" || exit 1
+            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
             print_me $field_width "Configuring"
 
             { configure_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/configure.err" ;} &>"$LOGDIR/configure.log"
             test_pipe
+	    popd > /dev/null
         ;;
 
         _install)
-            cd "$SOURCES/latest" && pkg_srcdir="$(pwd)" || exit 1
+            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
             print_me $field_width "Installing"
 
             { install_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/install.err" ;} &>"$LOGDIR/install.log"
             test_pipe
+	    popd > /dev/null
         ;;
 
         _make)
-            cd "$SOURCES/latest" && pkg_srcdir="$(pwd)" || exit 1
+            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
             print_me $field_width "Building"
 
             { make_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/make.err" ;} &>"$LOGDIR/make.log"
             test_pipe
+	    popd > /dev/null
         ;;
 
         _patch)
-            cd "$SOURCES/latest" && pkg_srcdir="$(pwd)" || exit 1
+            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
             print_me $field_width "Patching"
 
             { patch_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/patch.err" ;} &>"$LOGDIR/patch.log"
             test_pipe
+	    popd > /dev/null
         ;;
 
         _prepare)
-            cd "$SOURCES/latest" && pkg_srcdir="$(pwd)" || exit 1
+            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
             print_me $field_width "Preparing"
 
             { prepare_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/prepare.err" ;} &>"$LOGDIR/prepare.log"
             test_pipe
+	    popd > /dev/null
         ;;
 
         # Function will execute commands without knowing about the pkg_srcdir.
