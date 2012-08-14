@@ -43,8 +43,8 @@ function run_command()
     while [ -n "$1" ]; do
         case "_$1" in
         _check)
-            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
             print_me $field_width "Checking"
+            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
 
             { check_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/check.err" ;} &>"$LOGDIR/check.log"
             test_pipe
@@ -53,23 +53,25 @@ function run_command()
 
         _clean)
             print_me $field_width "Cleaning"
-            # Check if function is defined and then run it.
-            if [ "`type -t clean_commands`" = 'function' ]; then
-                clean_commands
-            fi
-
             if [[ -h "$SOURCES/latest" && -n "$pkg_srcdir" ]]; then
-                pushd "$SOURCES/latest" > /dev/null
+                pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
+
+	        { clean_commands ;}
+	        # Remove source code and latest link last
                 rm -rf "$(readlink -nf $pkg_srcdir)" || exit 1
-                cd ../ && rm -rf 'latest' || exit 1
+                rm -rf '../latest' || exit 1
+                test_pipe
+	        popd > /dev/null
+            else
+            # Cleanup for plain command
+                { clean_commands ;}
+                test_pipe
             fi
-            print_ok
-	    popd > /dev/null
         ;;
 
         _configure)
-            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
             print_me $field_width "Configuring"
+            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
 
             { configure_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/configure.err" ;} &>"$LOGDIR/configure.log"
             test_pipe
@@ -77,8 +79,8 @@ function run_command()
         ;;
 
         _install)
-            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
             print_me $field_width "Installing"
+            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
 
             { install_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/install.err" ;} &>"$LOGDIR/install.log"
             test_pipe
@@ -86,8 +88,8 @@ function run_command()
         ;;
 
         _make)
-            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
             print_me $field_width "Building"
+            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
 
             { make_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/make.err" ;} &>"$LOGDIR/make.log"
             test_pipe
@@ -95,8 +97,8 @@ function run_command()
         ;;
 
         _patch)
-            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
             print_me $field_width "Patching"
+            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
 
             { patch_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/patch.err" ;} &>"$LOGDIR/patch.log"
             test_pipe
@@ -104,8 +106,8 @@ function run_command()
         ;;
 
         _prepare)
-            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
             print_me $field_width "Preparing"
+            pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
 
             { prepare_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/prepare.err" ;} &>"$LOGDIR/prepare.log"
             test_pipe
