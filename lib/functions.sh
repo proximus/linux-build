@@ -2,7 +2,7 @@
 # ARGS: CPUS
 function setup_environment()
 {
-    # Uset each variable and only keep he necessary ones.
+    # Unset each variable and only keep the necessary ones.
     unset $(/usr/bin/env | egrep '^(\w+)=(.*)$' | \
         egrep -vw 'HOME|TERM|PATH|PWD|SHLVL|_' | /usr/bin/cut -d= -f1);
 
