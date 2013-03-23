@@ -1,17 +1,47 @@
 #!/usr/bin/env bash
-set -e
-#set -x
+#===============================================================================
+#
+#          FILE:  prox-dist.sh
+#
+#         USAGE:  See prox-dist -h
+#
+#   DESCRIPTION:  This program is meant to be a tool for automatically building
+#                 Linux From Scratch (LFS).
+#
+#       OPTIONS:  ---
+#  REQUIREMENTS:  ---
+#          BUGS:  ---
+#         NOTES:  ---
+#        AUTHOR:  Samuel Gabrielsson (samuel.gabrielsson@gmail.com)
+#       COMPANY:
+#       VERSION:  1.0
+#       CREATED:  2013-03-13 09:00:00 IST
+#      REVISION:  ---
+#       CHANGES:  ---
+#
+#===============================================================================
 # Import functions from library
 source lib/functions.sh
 
-CONFIG_FILE=$1
-DIR=$( cd "$( dirname "$0" )" && pwd )
+# Run GNU getopt and check exit status
+TEMP=$(getopt -o dhvc: --long debug,help,config: \
+             -n $0 -- "$@")
+if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
+eval set -- "$TEMP"
 
-[ $# -eq 0 ] && {
-    echo "Example:"
-    echo "$0 conf/lfs-7.1-tools.cfg"
-    exit 1;
-}
+CONFIGFILE=
+while true; do
+  case "$1" in
+    -c | --config ) CONFIGFILE="$2"; shift 2 ;;
+    -d | --debug ) set -x; shift ;;
+    -h | --help ) print_usage; shift ; exit 0 ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+CONFIGFILE="$1"
+
+DIR=$( cd "$( dirname "$0" )" && pwd )
 
 # Set the LFS variable
 LFS=$DIR/lfs
@@ -34,7 +64,7 @@ SOURCES=$LFS/usr/src/sources
 # Read config file and start building
 o_IFS=$IFS
 IFS=$'\n'
-for line in `cat "$CONFIG_FILE"`; do
+for line in `cat "$CONFIGFILE"`; do
     IFS=$o_IFS
     export LOGDIR=""
     # Remove comments starting with '#'

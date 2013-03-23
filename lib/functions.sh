@@ -1,5 +1,28 @@
+#===============================================================================
+# Function will print out help on screen.
+# Usage: print_usage
+#===============================================================================
+function print_usage()
+{
+cat << EOF
+Usage: $(basename $0) [-d] [-h] -c <config file>
+
+Build Linux From Scratch (LFS) distribution
+
+Options:
+    -d, --debug                 Run in debug mode
+    -h, --help                  Print help message
+    -c, --config <configfile>   Load config file
+
+Example:
+    $(basename $0) -c conf/lfs-7.1-tools.cfg
+EOF
+}
+
+#===============================================================================
 # Function will setup a good working environment.
 # ARGS: CPUS
+#===============================================================================
 function setup_environment()
 {
     # Unset each variable and only keep the necessary ones.
@@ -18,19 +41,25 @@ function setup_environment()
     export LFS TOOLS LC_ALL LFS_TGT PATH PS1 MAKEFLAGS
 }
 
+#===============================================================================
 # Function with customized print.
+#===============================================================================
 function print_me()
 {
     printf "$(date +"%F-%T") %-*s %s" "$1" "$2"
 }
 
+#===============================================================================
 # Function will print ok in color.
+#===============================================================================
 function print_ok()
 {
     printf '%b\n' "\e[1;32m[  OK  ]\e[m"
 }
 
+#===============================================================================
 # Function will print fail in color.
+#===============================================================================
 function print_fail()
 {
     printf '%b\n' "\e[1;31m[ FAIL ]\e[m"
