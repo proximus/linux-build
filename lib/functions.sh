@@ -10,9 +10,10 @@ Usage: $(basename $0) [-d] [-h] -c <config file>
 Build Linux From Scratch (LFS) distribution
 
 Options:
+    -c, --config <configfile>   Load config file
     -d, --debug                 Run in debug mode
     -h, --help                  Print help message
-    -c, --config <configfile>   Load config file
+    -v, --verbose               Build in verbose mode
 
 Example:
     $(basename $0) -c conf/lfs-7.1-tools.cfg

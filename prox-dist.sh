@@ -23,23 +23,33 @@
 # Import functions from library
 source lib/functions.sh
 
+# Check if user has typed any arguments
+if [ $# -eq 0 ]; then
+    print_usage; exit 1
+fi
+
 # Run GNU getopt and check exit status
-TEMP=$(getopt -o dhvc: --long debug,help,config: \
+TEMP=$(getopt -o c:dhv --long config:,debug,help,verbose \
              -n $0 -- "$@")
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 eval set -- "$TEMP"
 
 CONFIGFILE=
+VERBOSE=false
 while true; do
   case "$1" in
     -c | --config ) CONFIGFILE="$2"; shift 2 ;;
     -d | --debug ) set -x; shift ;;
     -h | --help ) print_usage; shift ; exit 0 ;;
+    -v | --verbose ) VERBOSE=true; shift ;;
     -- ) shift; break ;;
     * ) break ;;
   esac
 done
-CONFIGFILE="$1"
+
+if [ ! -f "$CONFIGFILE"  ]; then
+   echo "Error: File $CONFIGFILE does not exist."; exit 1
+fi
 
 DIR=$( cd "$( dirname "$0" )" && pwd )
 

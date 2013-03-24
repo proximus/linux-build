@@ -13,6 +13,7 @@ prepare_commands()
 patch_commands()
 { :
 	patch -Np1 -i ../gcc-4.6.2-cross_compile-1.patch
+	patch -Np1 -i ../gcc-4.6.2-gengtype.patch
 }
 
 configure_commands()
@@ -25,11 +26,10 @@ configure_commands()
 		--disable-decimal-float --disable-threads \
 		--disable-libmudflap --disable-libssp \
 		--disable-libgomp --disable-libquadmath \
-	        --disable-target-libiberty --disable-target-zlib \
+        --disable-target-libiberty --disable-target-zlib \
 		--enable-languages=c --without-ppl --without-cloog \
 		--with-mpfr-include=$(pwd)/../gcc-4.6.2/mpfr/src \
 		--with-mpfr-lib=$(pwd)/mpfr/src/.libs
-	
 }
 
 make_commands()
