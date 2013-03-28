@@ -59,7 +59,7 @@ configure_commands()
 	    --disable-bootstrap --disable-libgomp \
 	    --without-ppl --without-cloog \
 	    --with-mpfr-include=$(pwd)/../gcc-4.6.2/mpfr/src \
-	    --with-mpfr-lib=$(pwd)/mpfr/src/.libs    
+	    --with-mpfr-lib=$(pwd)/mpfr/src/.libs
 }
 
 make_commands()
