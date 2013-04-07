@@ -43,7 +43,7 @@ verbose_mode=false
 while true; do
   case "$1" in
     -c | --component )
-        if [ ! -f "$2"  ]; then
+        if [ ! -f "$2" ]; then
             echo "Error: Component file \"$2\" does not exist"; exit 1
         fi
         component_file="$2"
@@ -58,14 +58,15 @@ while true; do
         verbose_mode=true
         shift ;;
     -- )
-        if [ ! -f "$2"  ]; then
-            echo "Error: Component list \"$2\" does not exist"; exit 1
-        fi
         component_list="$2"
         shift 2; break ;;
     * ) break ;;
   esac
 done
+# Check if component file is not defined and that the component list exists
+if [ ! -f "$component_list" ] && [ -z "$component_file" ]; then
+    echo "Error: Component list \"$component_list\" does not exist"; exit 1
+fi
 
 DIR=$( cd "$( dirname "$0" )" && pwd )
 
@@ -92,7 +93,7 @@ component_array=()
 while read line; do
     component_array+=(${line/\#*/})
 done < "$component_list"
-# Append any given component from command line
+# Append component file given from command line
 component_array+=(${component_file})
 
 # Start building

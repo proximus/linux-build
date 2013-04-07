@@ -5,7 +5,7 @@
 function print_usage()
 {
 cat << EOF
-Usage: $(basename $0) [-d] [-h] [-f <component file>] [componentlist]
+Usage: $(basename $0) [-d] [-h] [-c <component file>] [component list]
 
 Build Linux From Scratch (LFS) distribution
 
