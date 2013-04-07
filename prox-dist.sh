@@ -8,6 +8,9 @@
 #   DESCRIPTION:  This program is meant to be a tool for automatically building
 #                 Linux From Scratch (LFS).
 #
+#                 1. Parse arguments from command line.
+#                 2. Load...
+#
 #       OPTIONS:  ---
 #  REQUIREMENTS:  ---
 #          BUGS:  ---
@@ -29,27 +32,40 @@ if [ $# -eq 0 ]; then
 fi
 
 # Run GNU getopt and check exit status
-TEMP=$(getopt -o c:dhv --long config:,debug,help,verbose \
+temp_args=$(getopt -o c:dhv --long component:,debug,help,verbose \
              -n $0 -- "$@")
-if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
-eval set -- "$TEMP"
+if [ $? != 0 ] ; then echo "Terminating" >&2 ; exit 1 ; fi
+eval set -- "$temp_args"
 
-CONFIGFILE=
-VERBOSE=false
+component_list=
+component_file=
+verbose_mode=false
 while true; do
   case "$1" in
-    -c | --config ) CONFIGFILE="$2"; shift 2 ;;
-    -d | --debug ) set -x; shift ;;
-    -h | --help ) print_usage; shift ; exit 0 ;;
-    -v | --verbose ) VERBOSE=true; shift ;;
-    -- ) shift; break ;;
+    -c | --component )
+        if [ ! -f "$2"  ]; then
+            echo "Error: Component file \"$2\" does not exist"; exit 1
+        fi
+        component_file="$2"
+        shift 2 ;;
+    -d | --debug )
+        set -x
+        shift ;;
+    -h | --help )
+        print_usage
+        shift ; exit 0 ;;
+    -v | --verbose )
+        verbose_mode=true
+        shift ;;
+    -- )
+        if [ ! -f "$2"  ]; then
+            echo "Error: Component list \"$2\" does not exist"; exit 1
+        fi
+        component_list="$2"
+        shift 2; break ;;
     * ) break ;;
   esac
 done
-
-if [ ! -f "$CONFIGFILE"  ]; then
-   echo "Error: File $CONFIGFILE does not exist."; exit 1
-fi
 
 DIR=$( cd "$( dirname "$0" )" && pwd )
 
@@ -63,7 +79,7 @@ TOOLS=/tmp/tools
 CPUS=4
 
 # Setup the build environment and export shell variables
-setup_environment $NR_CPUS
+setup_environment
 
 # Create LFS directory
 mkdir -pv $LFS
@@ -71,32 +87,33 @@ mkdir -pv $LFS
 # Set the SOURCES variable
 SOURCES=$LFS/usr/src/sources
 
-# Read config file and start building
-o_IFS=$IFS
-IFS=$'\n'
-for line in `cat "$CONFIGFILE"`; do
-    IFS=$o_IFS
-    export LOGDIR=""
-    # Remove comments starting with '#'
-    [[ "$line" = \#* ]] && continue
+# Load config file into array and remove comments and other things we don't need
+component_array=()
+while read line; do
+    component_array+=(${line/\#*/})
+done < "$component_list"
+# Append any given component from command line
+component_array+=(${component_file})
 
-    # Get the name of the script
-    script="${line##*/}"
+# Start building
+for component in ${component_array[@]}; do
+    export LOGDIR=""
+
     # Set the log directory
-    LOGDIR="$SOURCES/log/$script" && mkdir -p "$LOGDIR" || exit 1
+    LOGDIR="$SOURCES/log/${component##*/}" && mkdir -p "$LOGDIR" || exit 1
 
     # Print the script
     echo "================================================================================"
-    echo "Running: $(eval echo $line)"
+    echo "Running: ${component}"
     echo "Log dir: ${LOGDIR}"
     echo "================================================================================"
 
     # Run the build libraries
     source "$DIR"/lib/build.sh
     # Run the actual package build scipt
-    source $(eval echo "$line")
+    source $(eval echo "$component")
 done
-IFS=$o_IFS
+
 echo "================================================================================"
 echo "Finished building"
 echo "================================================================================"
