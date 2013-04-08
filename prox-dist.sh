@@ -90,9 +90,11 @@ SOURCES=$LFS/usr/src/sources
 
 # Load config file into array and remove comments and other things we don't need
 component_array=()
-while read line; do
-    component_array+=(${line/\#*/})
-done < "$component_list"
+if [ "$component_list" ]; then
+    while read line; do
+        component_array+=(${line/\#*/})
+    done < "$component_list"
+fi
 # Append component file given from command line
 component_array+=(${component_file})
 

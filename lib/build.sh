@@ -56,14 +56,16 @@ function run_command()
             if [[ -h "$SOURCES/latest" && -n "$pkg_srcdir" ]]; then
                 pushd "$SOURCES/latest" > /dev/null && pkg_srcdir="$(pwd)" || exit 1
 
-	        { clean_commands ;}
-	        # Remove source code and latest link last
+                if [ "`type -t clean_commands`" = 'function' ]; then
+                    { clean_commands ;}
+                fi
+                # Remove source code and latest link last
                 rm -rf "$(readlink -nf $pkg_srcdir)" || exit 1
                 rm -rf '../latest' || exit 1
                 test_pipe
-	        popd > /dev/null
+                popd > /dev/null
             else
-            # Cleanup for plain command
+                # Cleanup for plain command
                 { clean_commands ;}
                 test_pipe
             fi
@@ -75,7 +77,7 @@ function run_command()
 
             { configure_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/configure.err" ;} &>"$LOGDIR/configure.log"
             test_pipe
-	    popd > /dev/null
+            popd > /dev/null
         ;;
 
         _install)
@@ -84,7 +86,7 @@ function run_command()
 
             { install_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/install.err" ;} &>"$LOGDIR/install.log"
             test_pipe
-	    popd > /dev/null
+            popd > /dev/null
         ;;
 
         _make)
@@ -93,7 +95,7 @@ function run_command()
 
             { make_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/make.err" ;} &>"$LOGDIR/make.log"
             test_pipe
-	    popd > /dev/null
+            popd > /dev/null
         ;;
 
         _patch)
@@ -102,7 +104,7 @@ function run_command()
 
             { patch_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/patch.err" ;} &>"$LOGDIR/patch.log"
             test_pipe
-	    popd > /dev/null
+            popd > /dev/null
         ;;
 
         _prepare)
@@ -111,7 +113,7 @@ function run_command()
 
             { prepare_commands 3>&1 1>&2 2>&3 | tee "$LOGDIR/prepare.err" ;} &>"$LOGDIR/prepare.log"
             test_pipe
-	    popd > /dev/null
+            popd > /dev/null
         ;;
 
         # Function will execute commands without knowing about the pkg_srcdir.
