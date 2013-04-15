@@ -21,11 +21,13 @@ EOF
 }
 
 #===============================================================================
-# Function will setup a good working environment.
-# ARGS: CPUS
+# Function will setup a working environment for the toolchain.
 #===============================================================================
-function setup_environment()
+function env_toolchain()
 {
+    # Get number of processors for concurrent building
+    local CPUS="$(grep -c ^processor /proc/cpuinfo)"
+
     # Unset each variable and only keep the necessary ones.
     unset $(/usr/bin/env | egrep '^(\w+)=(.*)$' | \
         egrep -vw 'HOME|TERM|PATH|PWD|SHLVL|_' | /usr/bin/cut -d= -f1);
@@ -40,6 +42,26 @@ function setup_environment()
     MAKEFLAGS="-j $CPUS"
 
     export LFS TOOLS LC_ALL LFS_TGT PATH PS1 MAKEFLAGS
+}
+
+#===============================================================================
+# Function will enter the chroot environment. Must be root to run chroot!
+#===============================================================================
+function env_chroot()
+{
+    if [[ -z "$LFS" ]]; then
+        echo "$0 Error: Variable \"LFS\" is not set"; exit 1
+    fi
+    if [[ -z "$TOOLS" ]]; then
+        echo "$0 Error: Variable \"TOOLS\" is not set"; exit 1
+    fi
+    sudo su
+    chroot "$LFS" "$TOOLS"/bin/env -i \
+        HOME=/root                  \
+        TERM="$TERM"                \
+        PS1='\u:\w\$ '              \
+        PATH=/bin:/usr/bin:/sbin:/usr/sbin:$TOOLS/bin \
+        "$TOOLS"/bin/bash --login +h
 }
 
 #===============================================================================

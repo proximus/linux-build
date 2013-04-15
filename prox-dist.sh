@@ -34,7 +34,7 @@ fi
 # Run GNU getopt and check exit status
 temp_args=$(getopt -o c:dhv --long component:,debug,help,verbose \
              -n $0 -- "$@")
-if [ $? != 0 ] ; then echo "Terminating" >&2 ; exit 1 ; fi
+if [ $? != 0 ] ; then echo "$0 Terminating" >&2 ; exit 1 ; fi
 eval set -- "$temp_args"
 
 component_list=
@@ -44,7 +44,7 @@ while true; do
   case "$1" in
     -c | --component )
         if [ ! -f "$2" ]; then
-            echo "Error: Component file \"$2\" does not exist"; exit 1
+            echo "$0 Error: Component file \"$2\" does not exist"; exit 1
         fi
         component_file="$2"
         shift 2 ;;
@@ -65,7 +65,7 @@ while true; do
 done
 # Check if component file is not defined and that the component list exists
 if [ ! -f "$component_list" ] && [ -z "$component_file" ]; then
-    echo "Error: Component list \"$component_list\" does not exist"; exit 1
+    echo "$0 Error: Component list \"$component_list\" does not exist"; exit 1
 fi
 
 DIR=$( cd "$( dirname "$0" )" && pwd )
@@ -76,11 +76,9 @@ LFS=$DIR/lfs
 # Set the TOOLS variable
 TOOLS=/tmp/tools
 
-# Choose number of CPUs when building
-CPUS=4
-
 # Setup the build environment and export shell variables
-setup_environment
+env_toolchain
+#env_chroot
 
 # Create LFS directory
 mkdir -pv $LFS
