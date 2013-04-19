@@ -2,7 +2,7 @@ PACKAGE=''
 
 plain_commands()
 { :
-    sudo mount -v --bind /dev $LFS/dev
+    mount -v --bind /dev $LFS/dev
 }
 
 run_command plain
