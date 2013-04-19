@@ -5,7 +5,7 @@
 function print_usage()
 {
 cat << EOF
-Usage: $(basename $0) [-d] [-h] [-c <component file>] [component list]
+Usage: $(basename $0) [-d] [-h] [-t] [-c <component file>] [component list]
 
 Build Linux From Scratch (LFS) distribution
 
@@ -13,7 +13,7 @@ Options:
     -c, --component <file>      Load component config file
     -d, --debug                 Run in debug mode
     -h, --help                  Print help message
-    -v, --verbose               Build in verbose mode
+    -t, --toolchain             Build toolchain from component list or file
 
 Example:
     $(basename $0) conf/lfs-7.1-tools.cfg

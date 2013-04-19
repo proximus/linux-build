@@ -23,6 +23,10 @@
 #       CHANGES:  ---
 #
 #===============================================================================
+component_list=
+component_file=
+build_toolchain="false"
+
 # Import functions from library
 source lib/functions.sh
 
@@ -32,14 +36,11 @@ if [ $# -eq 0 ]; then
 fi
 
 # Run GNU getopt and check exit status
-temp_args=$(getopt -o c:dhv --long component:,debug,help,verbose \
+temp_args=$(getopt -o c:dht --long component:,debug,help,toolchain \
              -n $0 -- "$@")
 if [ $? != 0 ] ; then echo "$0 Terminating" >&2 ; exit 1 ; fi
 eval set -- "$temp_args"
 
-component_list=
-component_file=
-verbose_mode=false
 while true; do
   case "$1" in
     -c | --component )
@@ -54,8 +55,8 @@ while true; do
     -h | --help )
         print_usage
         shift ; exit 0 ;;
-    -v | --verbose )
-        verbose_mode=true
+    -t | --toolchain )
+        build_toolchain=0
         shift ;;
     -- )
         component_list="$2"
