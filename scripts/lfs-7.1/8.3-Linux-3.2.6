@@ -1,0 +1,19 @@
+PACKAGE='linux-3.2.6.tar.xz'
+
+configure_commands()
+{ :
+    make mrproper
+}
+
+make_commands()
+{ :
+	make
+}
+
+install_commands()
+{ :
+	make install
+}
+
+#run_command unpack configure make install clean
+run_command unpack configure make
