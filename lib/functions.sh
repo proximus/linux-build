@@ -55,7 +55,6 @@ function env_chroot()
     if [[ -z "$TOOLS" ]]; then
         echo "$0 Error: Variable \"TOOLS\" is not set"; exit 1
     fi
-    sudo su
     chroot "$LFS" "$TOOLS"/bin/env -i \
         HOME=/root                  \
         TERM="$TERM"                \
