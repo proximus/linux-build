@@ -25,7 +25,7 @@
 #===============================================================================
 component_list=
 component_file=
-build_toolchain="false"
+TOOLCHAIN="false"
 
 # Import functions from library
 source lib/functions.sh
@@ -56,7 +56,7 @@ while true; do
         print_usage
         shift ; exit 0 ;;
     -t | --toolchain )
-        build_toolchain=0
+        TOOLCHAIN="true"
         shift ;;
     -- )
         component_list="$2"
@@ -78,8 +78,15 @@ LFS=$DIR/lfs
 TOOLS=/tmp/tools
 
 # Setup the build environment and export shell variables
-env_toolchain
-#env_chroot
+if [ "$TOOLCHAIN" = "true" ]; then
+    env_toolchain
+else
+    # Chroot environment
+    if [ "$UID" -ne 0 ]; then
+        echo "$0 Error: You must be root to run this script"; exit 1
+    fi
+    env_chroot
+fi
 
 # Create LFS directory
 mkdir -pv $LFS
@@ -97,6 +104,9 @@ fi
 # Append component file given from command line
 component_array+=(${component_file})
 
+# Source the build functions
+source "$DIR"/lib/build.sh
+
 # Start building
 for component in ${component_array[@]}; do
     export LOGDIR=""
@@ -110,8 +120,6 @@ for component in ${component_array[@]}; do
     echo "Log dir: ${LOGDIR}"
     echo "================================================================================"
 
-    # Run the build libraries
-    source "$DIR"/lib/build.sh
     # Run the actual package build scipt
     source $(eval echo "$component")
 done
