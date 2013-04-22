@@ -10,7 +10,6 @@ plain_commands()
         http://www.mpfr.org/mpfr-3.1.0/mpfr-3.1.0.tar.bz2
         http://ftp.gnu.org/gnu/gmp/gmp-5.0.4.tar.xz
         http://www.multiprecision.org/mpc/download/mpc-0.9.tar.gz
-
         http://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.6.tar.xz
         http://ftp.gnu.org/gnu/glibc/glibc-2.14.1.tar.bz2
         http://prdownloads.sourceforge.net/tcl/tcl8.5.11-src.tar.gz
@@ -42,7 +41,7 @@ plain_commands()
         http://www.linuxfromscratch.org/patches/lfs/7.1/gcc-4.6.2-startfiles_fix-1.patch
         http://www.linuxfromscratch.org/patches/lfs/7.1/bash-4.2-fixes-4.patch
         http://www.linuxfromscratch.org/patches/lfs/7.1/perl-5.14.2-libc-1.patch
-        https://github.com/proximus/misc-code/blob/master/patches/gcc-4.6.2-gengtype.patch
+        https://raw.github.com/proximus/misc-code/master/patches/gcc-4.6.2-gengtype.patch
 	)
 
 	# Define packages and patches needed to build Tools LFS.
@@ -148,10 +147,10 @@ plain_commands()
 	# Download lfs packages to SOURCES directory
 	wget -nc ${wget_urls[*]} -P "$SOURCES"
 
-	# Check if lfs packages are healthy.
+	# Check if lfs packages are healthy. Exit if computed checksum did NOT match.
 	pushd  "$SOURCES"
 	for i in ${!md5_sums[*]}; do
-		echo "${md5_sums[$i]}  ${packages[$i]}" | md5sum -c
+		echo "${md5_sums[$i]}  ${packages[$i]}" | md5sum -c - || exit 1
 	done
 	popd
 }
