@@ -30,7 +30,7 @@ function env_toolchain()
 
     # Unset each variable and only keep the necessary ones.
     unset $(/usr/bin/env | egrep '^(\w+)=(.*)$' | \
-        egrep -vw 'HOME|TERM|PATH|PWD|SHLVL|_' | /usr/bin/cut -d= -f1);
+        egrep -vw 'HOME|TERM|PATH|PWD|SHLVL|_|http_proxy|https_proxy' | /usr/bin/cut -d= -f1);
 
     set +h
     umask 022
