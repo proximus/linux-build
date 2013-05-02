@@ -1,6 +1,7 @@
 Linux From Scratch Automatic Build System
 
 Install some packages
+$ sudo apt-get install bison gawk texinfo
 $ sudo apt-get install qemu
 
 Make a file containing the disk image
@@ -8,6 +9,9 @@ $ fallocate -l 10G lfs-image.raw
 
 Create filesystem on the disk image
 $ mkfs.ext4 -F lfs-image.raw
+
+# Mount the disk image
+$ sudo mount -o loop lfs-image.raw lfs/
 
 Construct the temporary system
 $ ./prox-dist.sh -t conf/lfs-7.1-tools.cfg
