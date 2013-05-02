@@ -1,2 +1,12 @@
-This is a Linux From Scratch Automatic Build System.
+Linux From Scratch Automatic Build System
 
+Make a file containing the disk image
+$ fallocate -l 10G lfs-image.raw
+
+Create filesystem(s) on the disk image
+$ mkfs.ext4 -F lfs-image.raw
+
+Constructing a Temporary System
+$ ./prox-dist.sh -t conf/lfs-7.1-tools.cfg
+
+more to come...
