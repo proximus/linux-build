@@ -76,6 +76,10 @@ LFS=$DIR/lfs
 
 # Set the TOOLS variable
 TOOLS=/tmp/tools
+if [ ! -f $TOOLS ] && [ ! -L $TOOLS ]; then
+   echo "Creating symlink"
+   ln -svnf $LFS$TOOLS $TOOLS
+fi
 
 # Setup the build environment and export shell variables
 if [ "$TOOLCHAIN" = "true" ]; then
