@@ -1,0 +1,11 @@
+PACKAGE=''
+
+plain_commands()
+{ :
+    chroot "$LFS" $TOOLS/bin/env -i \
+        HOME=/root TERM="$TERM" PS1='\u:\w\$ ' \
+        PATH=/bin:/usr/bin:/sbin:/usr/sbin:$TOOLS/bin \
+        $TOOLS/bin/bash --login +h
+}
+
+run_command plain
