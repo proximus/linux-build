@@ -98,6 +98,9 @@ mkdir -pv $LFS
 # Set the SOURCES variable
 SOURCES=$LFS/usr/src/sources
 
+# Source the build functions
+source "$DIR"/lib/build.sh
+
 # Load config file into array and remove comments and other things we don't need
 component_array=()
 if [ "$component_list" ]; then
@@ -107,9 +110,6 @@ if [ "$component_list" ]; then
 fi
 # Append component file given from command line
 component_array+=(${component_file})
-
-# Source the build functions
-source "$DIR"/lib/build.sh
 
 # Start building
 for component in ${component_array[@]}; do
