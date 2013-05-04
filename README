@@ -1,18 +1,22 @@
-Linux From Scratch Automatic Build System
+# Linux From Scratch Automatic Build System
 
-Install packages needed for build
+# Install packages needed for build
 $ sudo apt-get install bison gawk texinfo
 
-Make a file containing the disk image
-$ fallocate -l 10G lfs-image.raw
+# Make a file containing the disk image
+$ fallocate -l 10G image-lfs-7.1.raw
 
-Create filesystem on the disk image
-$ mkfs.ext4 -F lfs-image.raw
+# Create filesystem on the disk image
+$ mkfs.ext4 -F image-lfs-7.1.raw
 
 # Mount the disk image
-$ sudo mount -o loop lfs-image.raw lfs/
+$ sudo mount -o loop image-lfs-7.1.raw lfs/
 
-Construct the temporary system
+# Construct the temporary system
 $ ./prox-dist.sh -t conf/lfs-7.1-tools.cfg
 
+# Prepare Virtual Kernel File Systems
+$ sudo ./prox-dist.sh -t -f components/lfs-7.1/chapter6/6.2-Preparing-Virtual-Kernel-File-Systems
+
+# Enter the Chroot Environment
 more to come...
