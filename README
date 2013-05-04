@@ -1,8 +1,7 @@
 Linux From Scratch Automatic Build System
 
-Install some packages
+Install packages needed for build
 $ sudo apt-get install bison gawk texinfo
-$ sudo apt-get install qemu
 
 Make a file containing the disk image
 $ fallocate -l 10G lfs-image.raw
