@@ -1,8 +1,0 @@
-PACKAGE=''
-
-plain_commands()
-{ :
-    mount -v --bind /dev $LFS/dev
-}
-
-run_command plain

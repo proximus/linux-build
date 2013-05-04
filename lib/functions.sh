@@ -5,18 +5,19 @@
 function print_usage()
 {
 cat << EOF
-Usage: $(basename $0) [-d] [-h] [-t] [-c <component file>] [component list]
+Usage: $(basename $0) [-c] [-d] [-h] [-t] [-f <component file>] [component list]
 
 Build Linux From Scratch (LFS) distribution
 
 Options:
-    -c, --component <file>      Load component config file
+    -c, --chroot                Build in chroot from component list or file
     -d, --debug                 Run in debug mode
+    -f, --component-file        Load component config file
     -h, --help                  Print help message
     -t, --toolchain             Build toolchain from component list or file
 
 Example:
-    $(basename $0) conf/lfs-7.1-tools.cfg
+    $(basename $0) -t conf/lfs-7.1-tools.cfg
 EOF
 }
 
@@ -49,13 +50,19 @@ function env_toolchain()
 #===============================================================================
 function env_chroot()
 {
+    if [ "$UID" -ne 0 ]; then
+        echo "$0 Error: You must be root to run this script"; exit 1
+    fi
     if [[ -z "$LFS" ]]; then
         echo "$0 Error: Variable \"LFS\" is not set"; exit 1
     fi
     if [[ -z "$TOOLS" ]]; then
         echo "$0 Error: Variable \"TOOLS\" is not set"; exit 1
     fi
-    chroot "$LFS" "$TOOLS"/bin/env -i \
+    # Check if you are in chroot env
+
+    echo "To enter chroot jail, type: "
+    echo chroot "$LFS" "$TOOLS"/bin/env -i \
         HOME=/root                  \
         TERM="$TERM"                \
         PS1='\u:\w\$ '              \

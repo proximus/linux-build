@@ -25,6 +25,7 @@
 #===============================================================================
 component_list=
 component_file=
+CHROOT="false"
 TOOLCHAIN="false"
 
 # Import functions from library
@@ -36,22 +37,25 @@ if [ $# -eq 0 ]; then
 fi
 
 # Run GNU getopt and check exit status
-temp_args=$(getopt -o c:dht --long component:,debug,help,toolchain \
+temp_args=$(getopt -o cdf:ht --long chroot,component-file:,debug,help,toolchain \
              -n $0 -- "$@")
 if [ $? != 0 ] ; then echo "$0 Terminating" >&2 ; exit 1 ; fi
 eval set -- "$temp_args"
 
 while true; do
   case "$1" in
-    -c | --component )
+    -c | --chroot )
+        CHROOT="true"
+        shift ;;
+    -d | --debug )
+        set -x
+        shift ;;
+    -f | --component-file )
         if [ ! -f "$2" ]; then
             echo "$0 Error: Component file \"$2\" does not exist"; exit 1
         fi
         component_file="$2"
         shift 2 ;;
-    -d | --debug )
-        set -x
-        shift ;;
     -h | --help )
         print_usage
         shift ; exit 0 ;;
@@ -84,12 +88,11 @@ fi
 # Setup the build environment and export shell variables
 if [ "$TOOLCHAIN" = "true" ]; then
     env_toolchain
-else
+elif [ "$CHROOT" = "true" ]; then
     # Chroot environment
-    if [ "$UID" -ne 0 ]; then
-        echo "$0 Error: You must be root to run this script"; exit 1
-    fi
     env_chroot
+else
+    echo "Error: Choose an environment"; exit 1
 fi
 
 # Create LFS directory
