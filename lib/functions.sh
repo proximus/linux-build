@@ -50,24 +50,24 @@ function env_toolchain()
 #===============================================================================
 function env_chroot()
 {
-    if [ "$UID" -ne 0 ]; then
-        echo "$0 Error: You must be root to run this script"; exit 1
-    fi
+#    if [ "$UID" -ne 0 ]; then
+#        echo "$0 Error: You must be root to run this script"; exit 1
+#    fi
     if [[ -z "$LFS" ]]; then
         echo "$0 Error: Variable \"LFS\" is not set"; exit 1
     fi
     if [[ -z "$TOOLS" ]]; then
         echo "$0 Error: Variable \"TOOLS\" is not set"; exit 1
     fi
-    # Check if you are in chroot env
 
-    echo "To enter chroot jail, type: "
-    echo chroot "$LFS" "$TOOLS"/bin/env -i \
-        HOME=/root                  \
-        TERM="$TERM"                \
-        PS1='\u:\w\$ '              \
-        PATH=/bin:/usr/bin:/sbin:/usr/sbin:$TOOLS/bin \
-        "$TOOLS"/bin/bash --login +h
+cat << EOF
+sudo chroot "$LFS" $TOOLS/bin/env -i \
+    HOME=/root \
+    TERM="$TERM" \
+    PS1='\u:\w\$ ' \
+    PATH=/bin:/usr/bin:/sbin:/usr/sbin:$TOOLS/bin \
+    $TOOLS/bin/bash --login +h
+EOF
 }
 
 #===============================================================================

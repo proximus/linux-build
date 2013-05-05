@@ -90,7 +90,7 @@ if [ "$TOOLCHAIN" = "true" ]; then
     env_toolchain
 elif [ "$CHROOT" = "true" ]; then
     # Chroot environment
-    env_chroot
+    env_chroot; exit 0
 else
     echo "Error: Choose an environment"; exit 1
 fi
