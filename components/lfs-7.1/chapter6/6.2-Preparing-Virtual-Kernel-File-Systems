@@ -3,38 +3,52 @@ PACKAGE=''
 plain_commands()
 { :
     # Creating directories onto which the file systems will be mounted
-    mkdir -pv $LFS/{dev,proc,sys}
+    sudo mkdir -pv $LFS/{dev,proc,sys}
 
     # Creating Initial Device Nodes
     if [ ! -c $LFS/dev/console ]; then
-        mknod -m 600 $LFS/dev/console c 5 1
+        sudo mknod -m 600 $LFS/dev/console c 5 1
     fi
     if [ ! -c $LFS/dev/null ]; then
-        mknod -m 666 $LFS/dev/null c 1 3
+        sudo mknod -m 666 $LFS/dev/null c 1 3
     fi
 
     # Mounting and Populating /dev
     if mountpoint -q "$LFS/dev"; then
         echo "Mountpoint \"$LFS/dev\" is already mounted"
     else
-        mount -v --bind /dev $LFS/dev
+        sudo mount -v --bind /dev $LFS/dev
     fi
 
+    #===============================================================================
     # Mounting Virtual Kernel File Systems
+    #===============================================================================
+    # Mount devpts
     if mountpoint -q "$LFS/dev/pts"; then
         echo "Mountpoint \"$LFS/dev/pts\" is already mounted"
     else
-        mount -v --bind /dev $LFS/dev/pts
+        sudo mount -vt devpts devpts $LFS/dev/pts
     fi
+
+    # Mount tmpfs
+    if mountpoint -q "$LFS/dev/shm"; then
+        echo "Mountpoint \"$LFS/dev/shm\" is already mounted"
+    else
+        sudo mount -vt tmpfs shm $LFS/dev/shm
+    fi
+
+    # Mount proc
     if mountpoint -q "$LFS/proc"; then
         echo "Mountpoint \"$LFS/proc\" is already mounted"
     else
-        mount -v --bind /dev $LFS/proc
+        sudo mount -vt proc proc $LFS/proc
     fi
+
+    # Mount sysfs
     if mountpoint -q "$LFS/sys"; then
         echo "Mountpoint \"$LFS/sys\" is already mounted"
     else
-        mount -v --bind /dev $LFS/sys
+        sudo mount -vt sysfs sysfs $LFS/sys
     fi
 }
 

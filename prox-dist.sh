@@ -96,7 +96,7 @@ else
 fi
 
 # Create LFS directory
-mkdir -pv $LFS
+/bin/mkdir -pv $LFS
 
 # Set the SOURCES variable
 SOURCES=$LFS/usr/src/sources
@@ -119,7 +119,7 @@ for component in ${component_array[@]}; do
     export LOGDIR=""
 
     # Set the log directory
-    LOGDIR="$SOURCES/log/${component##*/}" && mkdir -p "$LOGDIR" || exit 1
+    LOGDIR="$SOURCES/log/${component##*/}" && /bin/mkdir -p "$LOGDIR" || exit 1
 
     # Print the script
     echo "================================================================================"
