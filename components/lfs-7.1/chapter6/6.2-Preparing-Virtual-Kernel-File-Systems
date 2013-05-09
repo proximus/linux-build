@@ -24,31 +24,43 @@ plain_commands()
     # Mounting Virtual Kernel File Systems
     #===============================================================================
     # Mount devpts
-    if mountpoint -q "$LFS/dev/pts"; then
+    if mountpoint -q "$LFS/dev/pts/"; then
         echo "Mountpoint \"$LFS/dev/pts\" is already mounted"
     else
         sudo mount -vt devpts devpts $LFS/dev/pts
     fi
 
-    # Mount tmpfs
-    if mountpoint -q "$LFS/dev/shm"; then
-        echo "Mountpoint \"$LFS/dev/shm\" is already mounted"
-    else
-        sudo mount -vt tmpfs shm $LFS/dev/shm
-    fi
-
     # Mount proc
-    if mountpoint -q "$LFS/proc"; then
+    if mountpoint -q "$LFS/proc/"; then
         echo "Mountpoint \"$LFS/proc\" is already mounted"
     else
         sudo mount -vt proc proc $LFS/proc
     fi
 
     # Mount sysfs
-    if mountpoint -q "$LFS/sys"; then
+    if mountpoint -q "$LFS/sys/"; then
         echo "Mountpoint \"$LFS/sys\" is already mounted"
     else
         sudo mount -vt sysfs sysfs $LFS/sys
+    fi
+
+    # Mount tmpfs
+    # Check if file is a symbolic link
+    if [ -h $LFS/dev/shm ]; then
+        link=$(readlink $LFS/dev/shm)
+        sudo mkdir -pv $LFS/$link
+        if mountpoint -q "$LFS/$link/"; then
+            echo "Mountpoint \"$LFS/$link\" is already mounted"
+        else
+            sudo mount -vt tmpfs shm $LFS/$link
+        fi
+        unset link
+    else
+        if mountpoint -q "$LFS/dev/shm/"; then
+            echo "Mountpoint \"$LFS/dev/shm\" is already mounted"
+        else
+            sudo mount -vt tmpfs shm $LFS/dev/shm
+        fi
     fi
 }
 
