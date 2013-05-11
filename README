@@ -21,5 +21,10 @@ $ ./prox-dist.sh -t conf/lfs-7.1-tools.cfg
 # Prepare Virtual Kernel File Systems
 $ sudo ./prox-dist.sh -t conf/lfs-7.1-mount.cfg
 
+# Clone the build system into the disk image
+git clone git@github.com:proximus/linux-build.git lfs/usr/src/sources/linux-build
+
 # Enter the Chroot Environment
+$(eval echo $(./prox-dist.sh -c components/lfs-7.1/chapter6/6.4-Entering-the-Chroot-Environment))
+
 more to come...

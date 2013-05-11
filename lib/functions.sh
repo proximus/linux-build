@@ -31,7 +31,7 @@ function env_toolchain()
 
     # Unset each variable and only keep the necessary ones.
     unset $(/usr/bin/env | egrep '^(\w+)=(.*)$' | \
-        egrep -vw 'HOME|TERM|PATH|PWD|SHLVL|_|http_proxy|https_proxy' | /usr/bin/cut -d= -f1);
+        egrep -vw 'HOME|TERM|PATH|PWD|SHLVL|_|http_proxy|https_proxy|LFS' | /usr/bin/cut -d= -f1);
 
     set +h
     umask 022
@@ -50,9 +50,6 @@ function env_toolchain()
 #===============================================================================
 function env_chroot()
 {
-#    if [ "$UID" -ne 0 ]; then
-#        echo "$0 Error: You must be root to run this script"; exit 1
-#    fi
     if [[ -z "$LFS" ]]; then
         echo "$0 Error: Variable \"LFS\" is not set"; exit 1
     fi
@@ -61,11 +58,11 @@ function env_chroot()
     fi
 
 cat << EOF
-sudo chroot "$LFS" $TOOLS/bin/env -i \
-    HOME=/root \
-    TERM="$TERM" \
-    PS1='\u:\w\$ ' \
-    PATH=/bin:/usr/bin:/sbin:/usr/sbin:$TOOLS/bin \
+sudo chroot "$LFS" $TOOLS/bin/env -i \\
+    HOME=/root \\
+    TERM="$TERM" \\
+    PS1='\u:\w\$ ' \\
+    PATH=/bin:/usr/bin:/sbin:/usr/sbin:$TOOLS/bin \\
     $TOOLS/bin/bash --login +h
 EOF
 }

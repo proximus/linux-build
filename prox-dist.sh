@@ -23,13 +23,18 @@
 #       CHANGES:  ---
 #
 #===============================================================================
+DIR=$( cd "$( dirname "$0" )" && pwd )      # Set the DIR directory
+LFS=$DIR/lfs                                # Set the LFS variable
+TOOLS=/tmp/tools                            # Set the TOOLS variable
+SOURCES=$LFS/usr/src/sources                # Set the SOURCES variable
+LOGDIR=""                                   # Set the LOGDIR dynamically
+
 component_list=
 component_file=
-CHROOT="false"
-TOOLCHAIN="false"
+chroot="false"
+toolchain="false"
 
-# Import functions from library
-source lib/functions.sh
+source lib/functions.sh                     # Import functions from library
 
 # Check if user has typed any arguments
 if [ $# -eq 0 ]; then
@@ -45,7 +50,7 @@ eval set -- "$temp_args"
 while true; do
   case "$1" in
     -c | --chroot )
-        CHROOT="true"
+        chroot="true"
         shift ;;
     -d | --debug )
         set -x
@@ -60,7 +65,7 @@ while true; do
         print_usage
         shift ; exit 0 ;;
     -t | --toolchain )
-        TOOLCHAIN="true"
+        toolchain="true"
         shift ;;
     -- )
         component_list="$2"
@@ -73,36 +78,26 @@ if [ ! -f "$component_list" ] && [ -z "$component_file" ]; then
     echo "$0 Error: Component list \"$component_list\" does not exist"; exit 1
 fi
 
-DIR=$( cd "$( dirname "$0" )" && pwd )
-
-# Set the LFS variable
-LFS=$DIR/lfs
-
-# Set the TOOLS variable
-TOOLS=/tmp/tools
+# Create TOOLS symbolic link
 if [ ! -f $TOOLS ] && [ ! -L $TOOLS ]; then
    echo "Creating symlink"
    ln -svnf $LFS$TOOLS $TOOLS
 fi
 
+# Create the LFS directory
+/bin/mkdir -pv $LFS
+
 # Setup the build environment and export shell variables
-if [ "$TOOLCHAIN" = "true" ]; then
+if [ "$toolchain" = "true" ]; then
     env_toolchain
-elif [ "$CHROOT" = "true" ]; then
-    # Chroot environment
+elif [ "$chroot" = "true" ]; then
     env_chroot; exit 0
 else
     echo "Error: Choose an environment"; exit 1
 fi
 
-# Create LFS directory
-/bin/mkdir -pv $LFS
-
-# Set the SOURCES variable
-SOURCES=$LFS/usr/src/sources
-
 # Source the build functions
-source "$DIR"/lib/build.sh
+source lib/build.sh
 
 # Load config file into array and remove comments and other things we don't need
 component_array=()
@@ -116,8 +111,6 @@ component_array+=(${component_file})
 
 # Start building
 for component in ${component_array[@]}; do
-    export LOGDIR=""
-
     # Set the log directory
     LOGDIR="$SOURCES/log/${component##*/}" && /bin/mkdir -p "$LOGDIR" || exit 1
 
