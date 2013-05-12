@@ -58,11 +58,11 @@ function env_chroot()
     fi
 
 cat << EOF
-sudo chroot "$LFS" $TOOLS/bin/env -i \\
-    HOME=/root \\
-    TERM="$TERM" \\
-    PS1='\u:\w\$ ' \\
-    PATH=/bin:/usr/bin:/sbin:/usr/sbin:$TOOLS/bin \\
+sudo chroot "$LFS" $TOOLS/bin/env -i \
+    HOME=/root \
+    TERM="$TERM" \
+    PS1='\u:\w\$ ' \
+    PATH=/bin:/usr/bin:/sbin:/usr/sbin:$TOOLS/bin \
     $TOOLS/bin/bash --login +h
 EOF
 }
