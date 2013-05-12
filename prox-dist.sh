@@ -29,12 +29,12 @@ TOOLS=/tmp/tools                            # Set the TOOLS variable
 SOURCES=$LFS/usr/src/sources                # Set the SOURCES variable
 LOGDIR=""                                   # Set the LOGDIR dynamically
 
-component_list=
-component_file=
-chroot="false"
+component_list=                             # Init list of components to zero
+component_file=                             # Init build component to zero
 toolchain="false"
 
 source lib/functions.sh                     # Import functions from library
+source lib/build.sh                         # Import the build functions
 
 # Check if user has typed any arguments
 if [ $# -eq 0 ]; then
@@ -42,28 +42,28 @@ if [ $# -eq 0 ]; then
 fi
 
 # Run GNU getopt and check exit status
-temp_args=$(getopt -o cdf:ht --long chroot,component-file:,debug,help,toolchain \
+temp_args=$(getopt -o c:dhpt --long component-file:,debug,help,print-chroot,toolchain \
              -n $0 -- "$@")
 if [ $? != 0 ] ; then echo "$0 Terminating" >&2 ; exit 1 ; fi
 eval set -- "$temp_args"
 
 while true; do
   case "$1" in
-    -c | --chroot )
-        chroot="true"
-        shift ;;
-    -d | --debug )
-        set -x
-        shift ;;
-    -f | --component-file )
+    -c | --component-file )
         if [ ! -f "$2" ]; then
             echo "$0 Error: Component file \"$2\" does not exist"; exit 1
         fi
         component_file="$2"
         shift 2 ;;
+    -d | --debug )
+        set -x
+        shift ;;
     -h | --help )
         print_usage
         shift ; exit 0 ;;
+    -p | --print-chroot )
+        env_chroot; exit 0
+        shift ;;
     -t | --toolchain )
         toolchain="true"
         shift ;;
@@ -90,14 +90,9 @@ fi
 # Setup the build environment and export shell variables
 if [ "$toolchain" = "true" ]; then
     env_toolchain
-elif [ "$chroot" = "true" ]; then
-    env_chroot; exit 0
 else
     echo "Error: Choose an environment"; exit 1
 fi
-
-# Source the build functions
-source lib/build.sh
 
 # Load config file into array and remove comments and other things we don't need
 component_array=()

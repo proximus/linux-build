@@ -5,15 +5,15 @@
 function print_usage()
 {
 cat << EOF
-Usage: $(basename $0) [-c] [-d] [-h] [-t] [-f <component file>] [component list]
+Usage: $(basename $0) [-c <component file>] [-d] [-h] [-p] [-t] [component list]
 
 Build Linux From Scratch (LFS) distribution
 
 Options:
-    -c, --chroot                Build in chroot from component list or file
+    -c, --component-file        Load component config file
     -d, --debug                 Run in debug mode
-    -f, --component-file        Load component config file
     -h, --help                  Print help message
+    -p, --print-chroot          Print the chroot environment
     -t, --toolchain             Build toolchain from component list or file
 
 Example:
