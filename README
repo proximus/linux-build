@@ -1,7 +1,7 @@
 # Linux From Scratch Automatic Build System
 
 # Install packages needed for build
-$ sudo apt-get install bison gawk texinfo
+$ sudo apt-get install bash binutils bison bzip2 coreutils diffutils gawk gcc grep gzip m4 make patch perl sed tar texinfo xz-utils
 
 # Make a file containing the disk image
 $ fallocate -l 20G image-lfs-7.1.raw
