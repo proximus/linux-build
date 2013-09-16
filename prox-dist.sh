@@ -13,7 +13,9 @@
 #
 #       OPTIONS:  ---
 #  REQUIREMENTS:  ---
-#          BUGS:  ---
+#          BUGS:  path to env is different in chroot
+#                 getopt does not work in chroot env
+#                 path to binaries will not work in chroot env
 #         NOTES:  ---
 #        AUTHOR:  Samuel Gabrielsson (samuel.gabrielsson@gmail.com)
 #       COMPANY:
@@ -23,6 +25,7 @@
 #       CHANGES:  ---
 #
 #===============================================================================
+#set -x
 DIR=$( cd "$( dirname "$0" )" && pwd )      # Set the DIR directory
 LFS=$DIR/lfs                                # Set the LFS variable
 TOOLS=/tmp/tools                            # Set the TOOLS variable
@@ -31,48 +34,56 @@ LOGDIR=""                                   # Set the LOGDIR dynamically
 
 component_list=                             # Init list of components to zero
 component_file=                             # Init build component to zero
-toolchain="false"
+toolchain="false"                           # Default is not to build toolchain
 
 source lib/functions.sh                     # Import functions from library
 source lib/build.sh                         # Import the build functions
 
-# Check if user has typed any arguments
-if [ $# -eq 0 ]; then
-    print_usage; exit 1
+# Parse command line arguments
+if [ $# = 0 ]; then
+    _usage
+    echo "Error: No option(s) given" >&2
+    exit 1
 fi
-
-# Run GNU getopt and check exit status
-temp_args=$(getopt -o c:dhpt --long component-file:,debug,help,print-chroot,toolchain \
-             -n $0 -- "$@")
-if [ $? != 0 ] ; then echo "$0 Terminating" >&2 ; exit 1 ; fi
-eval set -- "$temp_args"
-
-while true; do
-  case "$1" in
-    -c | --component-file )
-        if [ ! -f "$2" ]; then
-            echo "$0 Error: Component file \"$2\" does not exist"; exit 1
-        fi
-        component_file="$2"
-        shift 2 ;;
-    -d | --debug )
+while getopts ':def:ht-' opt; do
+  case "$opt" in
+    d)
         set -x
-        shift ;;
-    -h | --help )
-        print_usage
-        shift ; exit 0 ;;
-    -p | --print-chroot )
-        env_chroot; exit 0
-        shift ;;
-    -t | --toolchain )
+        ;;
+    e)
+        env_chroot
+        exit 0
+        ;;
+    f)
+        if [ ! -f "$OPTARG" ]; then
+            echo "$0 Error: Component file \"$OPTARG\" does not exist" >&2
+            exit 1
+        fi
+        component_file="$OPTARG"
+        ;;
+    h)
+        _usage
+        ;;
+    t)
         toolchain="true"
-        shift ;;
-    -- )
-        component_list="$2"
-        shift 2; break ;;
-    * ) break ;;
+        ;;
+    ?)
+        _usage
+        echo "Error: Invalide option -$OPTARG" >&2
+        exit 1
+        ;;
+    :)
+        echo "Error: Missing option argument for -$OPTARG" >&2
+        exit 1
+        ;;
   esac
 done
+
+# Decrements the argument pointer so it points to next argument. $1 now refer
+# to the first non-option item supplied on the command-line if one exists.
+shift $(($OPTIND - 1))
+component_list="$1"
+
 # Check if component file is not defined and that the component list exists
 if [ ! -f "$component_list" ] && [ -z "$component_file" ]; then
     echo "$0 Error: Component list \"$component_list\" does not exist"; exit 1

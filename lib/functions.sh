@@ -2,22 +2,23 @@
 # Function will print out help on screen.
 # Usage: print_usage
 #===============================================================================
-function print_usage()
+function _usage()
 {
 cat << EOF
-Usage: $(basename $0) [-c <component file>] [-d] [-h] [-p] [-t] [component list]
+Usage: $(basename $0) [-f <component file>] [-d] [-h] [-e] [-t] [component list]
 
 Build Linux From Scratch (LFS) distribution
 
 Options:
-    -c, --component-file        Load component config file
-    -d, --debug                 Run in debug mode
-    -h, --help                  Print help message
-    -p, --print-chroot          Print the chroot environment
-    -t, --toolchain             Build toolchain from component list or file
+    -f,         Load component config file
+    -d,         Run in debug mode
+    -h,         Print help message
+    -e,         Print the chroot environment
+    -t,         Build toolchain from component list or file
 
 Example:
     $(basename $0) -t conf/lfs-7.1-tools.cfg
+
 EOF
 }
 
