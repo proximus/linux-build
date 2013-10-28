@@ -14,7 +14,6 @@
 #       OPTIONS:  ---
 #  REQUIREMENTS:  ---
 #          BUGS:  path to env is different in chroot
-#                 getopt does not work in chroot env
 #                 path to binaries will not work in chroot env
 #         NOTES:  ---
 #        AUTHOR:  Samuel Gabrielsson (samuel.gabrielsson@gmail.com)
@@ -34,7 +33,9 @@ LOGDIR=""                                   # Set the LOGDIR dynamically
 
 component_list=                             # Init list of components to zero
 component_file=                             # Init build component to zero
-toolchain="false"                           # Default is not to build toolchain
+env_chroot="false"                          # Default is not to print chroot env
+env_toolchain="false"                       # Default is not to build toolchain
+component_file_defined="false"
 
 source lib/functions.sh                     # Import functions from library
 source lib/build.sh                         # Import the build functions
@@ -47,42 +48,38 @@ if [ $# = 0 ]; then
 fi
 while getopts ':def:ht-' opt; do
   case "$opt" in
-    d)
-        set -x
-        ;;
-    e)
-        env_chroot
-        exit 0
-        ;;
+    d)  set -x ;;
+    e)  env_chroot="true" ;;
     f)
-        if [ ! -f "$OPTARG" ]; then
-            echo "$0 Error: Component file \"$OPTARG\" does not exist" >&2
-            exit 1
-        fi
-        component_file="$OPTARG"
-        ;;
-    h)
-        _usage
-        ;;
-    t)
-        toolchain="true"
-        ;;
-    ?)
-        _usage
-        echo "Error: Invalide option -$OPTARG" >&2
-        exit 1
-        ;;
-    :)
-        echo "Error: Missing option argument for -$OPTARG" >&2
-        exit 1
-        ;;
+        component_file_defined="true"
+        component_file="$OPTARG" ;;
+    h)  _usage ;;
+    t)  env_toolchain="true" ;;
+    ?)  echo "Error: Invalide option -$OPTARG" >&2; exit 1 ;;
+    :)  echo "Error: Missing option argument for -$OPTARG" >&2; exit 1 ;;
   esac
 done
 
-# Decrements the argument pointer so it points to next argument. $1 now refer
-# to the first non-option item supplied on the command-line if one exists.
+# Decrements the argument pointer so it points to next argument
 shift $(($OPTIND - 1))
+# $1 now refer to the first non-option item supplied on the command-line
 component_list="$1"
+
+if [ "$component_file_defined=" = "true" ] && [ ! -f "$component_file" ]; then
+        echo "$0 Error: Component file \"$component_file\" does not exist" >&2
+        exit 1
+fi
+
+echo "$0 : Component file \"$component_file\" exist" >&2
+exit 1
+
+# Check if the optional file argument has been typed
+if [ "$component_file_defined=" = "true" ]; then
+    if [ ! -f "$OPTARG" ]; then
+        echo "$0 Error: Component file \"$OPTARG\" does not exist" >&2
+        exit 1
+    fi
+fi
 
 # Check if component file is not defined and that the component list exists
 if [ ! -f "$component_list" ] && [ -z "$component_file" ]; then
@@ -99,8 +96,10 @@ fi
 /bin/mkdir -pv $LFS
 
 # Setup the build environment and export shell variables
-if [ "$toolchain" = "true" ]; then
+if [ "$env_toolchain" = "true" ]; then
     env_toolchain
+elif [ "$env_chroot" = "true" ]; then
+    env_chroot
 else
     echo "Error: Choose an environment"; exit 1
 fi
