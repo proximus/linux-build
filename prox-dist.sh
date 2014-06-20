@@ -24,9 +24,22 @@
 #       CHANGES:  ---
 #
 #===============================================================================
-#set -x
-DIR=$( cd "$( dirname "$0" )" && pwd )      # Set the DIR directory
-LFS=$DIR/lfs                                # Set the LFS variable
+
+#===============================================================================
+# Global variables (immutable)
+#===============================================================================
+
+# Set the program file name
+readonly PROGNAME=$(basename $0)
+
+# Set the program directory path
+readonly PROGDIR=$(readlink -m $(dirname $0))
+#readonly PROGDIR=$( cd "$( dirname "$0" )" && pwd )
+
+# Save all the program arguments
+readonly ARGS="$@"
+
+LFS=${PROGDIR}/lfs                          # Set the LFS variable
 TOOLS=/tmp/tools                            # Set the TOOLS variable
 SOURCES=$LFS/usr/src/sources                # Set the SOURCES variable
 LOGDIR=""                                   # Set the LOGDIR dynamically
@@ -40,23 +53,35 @@ component_file_defined="false"
 source lib/functions.sh                     # Import functions from library
 source lib/build.sh                         # Import the build functions
 
-# Parse command line arguments
-if [ $# = 0 ]; then
-    _usage
-    echo "Error: No option(s) given" >&2
-    exit 1
-fi
+handle_arguments $PROGNAME $ARGS
+
 while getopts ':def:ht-' opt; do
   case "$opt" in
     d)  set -x ;;
     e)  env_chroot="true" ;;
     f)
+        if [ ! -f "$OPTARG" ]; then
+            echo "$0 Error: Component file \"$OPTARG\" does not exist" >&2
+            exit 1
+        fi
         component_file_defined="true"
-        component_file="$OPTARG" ;;
-    h)  _usage ;;
-    t)  env_toolchain="true" ;;
-    ?)  echo "Error: Invalide option -$OPTARG" >&2; exit 1 ;;
-    :)  echo "Error: Missing option argument for -$OPTARG" >&2; exit 1 ;;
+        component_file="$OPTARG"
+        ;;
+    h)
+        print_usage $PROGNAME
+        ;;
+    t)
+        env_toolchain="true"
+        ;;
+    ?)
+        print_usage $PROGNAME
+        echo "Error: Invalide option -$OPTARG" >&2
+        exit 1
+        ;;
+    :)
+        echo "Error: Missing option argument for -$OPTARG" >&2
+        exit 1
+        ;;
   esac
 done
 
@@ -66,12 +91,9 @@ shift $(($OPTIND - 1))
 component_list="$1"
 
 if [ "$component_file_defined=" = "true" ] && [ ! -f "$component_file" ]; then
-        echo "$0 Error: Component file \"$component_file\" does not exist" >&2
-        exit 1
+    echo "$0 Error: Component file \"$component_file\" does not exist" >&2
+    exit 1
 fi
-
-echo "$0 : Component file \"$component_file\" exist" >&2
-exit 1
 
 # Check if the optional file argument has been typed
 if [ "$component_file_defined=" = "true" ]; then
@@ -83,7 +105,8 @@ fi
 
 # Check if component file is not defined and that the component list exists
 if [ ! -f "$component_list" ] && [ -z "$component_file" ]; then
-    echo "$0 Error: Component list \"$component_list\" does not exist"; exit 1
+    echo "$0 Error: Component list \"$component_list\" does not exist";
+    exit 1
 fi
 
 # Create TOOLS symbolic link
@@ -101,7 +124,8 @@ if [ "$env_toolchain" = "true" ]; then
 elif [ "$env_chroot" = "true" ]; then
     env_chroot
 else
-    echo "Error: Choose an environment"; exit 1
+    echo "Error: Choose an environment"
+    exit 1
 fi
 
 # Load config file into array and remove comments and other things we don't need

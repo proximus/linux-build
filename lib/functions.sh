@@ -1,11 +1,35 @@
+#===  FUNCTION  ================================================================
+#         NAME:  handle_arguments
+#  DESCRIPTION:  Function will handle the command line arguments.
+# PARAMETER  1:  The program name
+# PARAMETER  2:  The program arguments
+#===============================================================================
+function handle_arguments()
+{
+    local program_name=$1
+    local arguments=$2
+
+    # If no arguments are given, then give an error and exit
+    if [[ "${arguments}" == "" ]]; then
+        print_usage "${program_name}"
+        echo "Error: No option(s) given" >&2
+        exit 1
+    fi
+}
+
 #===============================================================================
 # Function will print out help on screen.
-# Usage: print_usage
+#
+# Arguments:
+#    $1 program_name    The program name
+#
 #===============================================================================
-function _usage()
+function print_usage()
 {
-cat << EOF
-Usage: $(basename $0) [-f <component file>] [-d] [-h] [-e] [-t] [component list]
+    local program_name=$1
+
+    cat <<- EOF
+Usage: $program_name [-f <component file>] [-d] [-h] [-e] [-t] [component list]
 
 Build Linux From Scratch (LFS) distribution
 
@@ -17,7 +41,11 @@ Options:
     -t,         Build toolchain from component list or file
 
 Example:
-    $(basename $0) -t conf/lfs-7.1-tools.cfg
+	Run all files:
+    	./$program_name -t conf/lfs-7.1-tools.cfg
+
+	Run one file:
+    	./$program_name -t -f components/lfs-7.1/chapter3/3.0-Packages-and-Patches
 
 EOF
 }

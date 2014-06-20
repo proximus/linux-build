@@ -3,8 +3,9 @@ PACKAGE=''
 # Download all sources.
 plain_commands()
 { :
-	# Define urls to source packages and patches needed to build Tools LFS.
-	wget_urls=(
+	# Define urls to source packages and patches
+	urls=(
+        #file://${PROGDIR}/packages/test/test-1.0.tar.gz
         http://ftp.gnu.org/gnu/binutils/binutils-2.22.tar.bz2
         http://ftp.gnu.org/gnu/gcc/gcc-4.6.2/gcc-4.6.2.tar.bz2
         http://www.mpfr.org/mpfr-3.1.0/mpfr-3.1.0.tar.bz2
@@ -44,49 +45,9 @@ plain_commands()
         https://raw.github.com/proximus/misc-code/master/patches/gcc-4.6.2-gengtype.patch
 	)
 
-	# Define packages and patches needed to build Tools LFS.
-	packages=(
-        binutils-2.22.tar.bz2
-        gcc-4.6.2.tar.bz2
-        mpfr-3.1.0.tar.bz2
-        gmp-5.0.4.tar.xz
-        mpc-0.9.tar.gz
-        linux-3.2.6.tar.xz
-        glibc-2.14.1.tar.bz2
-        tcl8.5.11-src.tar.gz
-        expect5.45.tar.gz
-        dejagnu-1.5.tar.gz
-        check-0.9.8.tar.gz
-        ncurses-5.9.tar.gz
-        bash-4.2.tar.gz
-        bzip2-1.0.6.tar.gz
-        coreutils-8.15.tar.xz
-        diffutils-3.2.tar.gz
-        file-5.10.tar.gz
-        findutils-4.4.2.tar.gz
-        gawk-4.0.0.tar.bz2
-        gettext-0.18.1.1.tar.gz
-        grep-2.10.tar.xz
-        gzip-1.4.tar.gz
-        m4-1.4.16.tar.bz2
-        make-3.82.tar.bz2
-        patch-2.6.1.tar.bz2
-        perl-5.14.2.tar.bz2
-        sed-4.2.1.tar.bz2
-        tar-1.26.tar.bz2
-        texinfo-4.13a.tar.gz
-        xz-5.0.3.tar.bz2
-        gcc-4.6.2-cross_compile-1.patch
-        glibc-2.14.1-gcc_fix-1.patch
-        glibc-2.14.1-cpuid-1.patch
-        gcc-4.6.2-startfiles_fix-1.patch
-        bash-4.2-fixes-4.patch
-        perl-5.14.2-libc-1.patch
-        gcc-4.6.2-gengtype.patch
-	)
-
 	# Define md5sum to verify healthy source code.
 	md5_sums=(
+        #b1eba5f503d372d297d2d8f71105ca7d
         ee0f10756c84979622b992a4a61ea3f5
         028115c4fbfb6cfd75d6369f4a90d87e
         238ae4a15cc3a5049b723daef5d17938
@@ -126,31 +87,26 @@ plain_commands()
         9d0f57b0c9a68217b8e2b8aacfd457f8
 	)
 
-	echo "WGET_URLS:"
-	for i in ${!wget_urls[*]}; do
-		printf "%4d: %s\n" $i ${wget_urls[$i]}
-	done
-	echo "PACKAGES:"
-	for i in ${!packages[*]}; do
-		printf "%4d: %s\n" $i ${packages[$i]}
-	done
-	echo "MD5_SUMS:"
-	for i in ${!md5_sums[*]}; do
-		printf "%4d: %s\n" $i ${md5_sums[$i]}
-	done
 	# Create the SOURCES directory
 	mkdir -pv "$SOURCES"
 
 	# Make the SOURCES directory writable and sticky
 	chmod -v a+wt "$SOURCES"
 
-	# Download lfs packages to SOURCES directory
-	wget -nc ${wget_urls[*]} -P "$SOURCES"
+    # Copy files to SOURCES depending on if the files are stored locally or if
+    # they need to be downloaded using wget.
+	for i in ${!urls[*]}; do
+        if [[ ${urls[$i]} =~ ^file:// ]]; then
+	        cp -v ${urls[$i]##file://} "$SOURCES"
+        else
+	        wget -nc ${urls[$i]} -P "$SOURCES"
+        fi
+    done
 
-	# Check if lfs packages are healthy. Exit if computed checksum did NOT match.
+	# Check if packages are healthy. Exit if computed checksum did NOT match.
 	pushd  "$SOURCES"
 	for i in ${!md5_sums[*]}; do
-		echo "${md5_sums[$i]}  ${packages[$i]}" | md5sum -c - || exit 1
+		echo "${md5_sums[$i]}  ${urls[$i]##*/}" | md5sum -c - || exit 1
 	done
 	popd
 }
