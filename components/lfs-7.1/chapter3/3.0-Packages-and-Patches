@@ -9,7 +9,6 @@ plain_commands()
 
 	# Define md5sums and urls to verify healthy files
 	url=(
-		["b1eba5f503d372d297d2d8f71105ca7d"]="file://${PROGDIR}/packages/test/test-1.0.tar.gz"
 		["ee0f10756c84979622b992a4a61ea3f5"]="http://ftp.gnu.org/gnu/binutils/binutils-2.22.tar.bz2"
 		["028115c4fbfb6cfd75d6369f4a90d87e"]="http://ftp.gnu.org/gnu/gcc/gcc-4.6.2/gcc-4.6.2.tar.bz2"
 		["238ae4a15cc3a5049b723daef5d17938"]="http://www.mpfr.org/mpfr-3.1.0/mpfr-3.1.0.tar.bz2"
