@@ -1,0 +1,12 @@
+diff --git a/toolchain/gcc/common.mk b/toolchain/gcc/common.mk
+index c18a330..a8d7ca1 100644
+--- a/toolchain/gcc/common.mk
++++ b/toolchain/gcc/common.mk
+@@ -111,6 +111,7 @@ GCC_CONFIGURE:= \
+                --build=$(GNU_HOST_NAME) \
+                --host=$(GNU_HOST_NAME) \
+                --target=$(REAL_GNU_TARGET_NAME) \
++               MAKEINFO=missing \
+                --with-gnu-ld \
+                --enable-target-optspace \
+                --disable-libgomp \

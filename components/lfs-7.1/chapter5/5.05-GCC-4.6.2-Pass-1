@@ -21,13 +21,22 @@ configure_commands()
 	mkdir -pv ../gcc-build
 	cd ../gcc-build
 	../gcc-4.6.2/configure \
-		--target=$LFS_TGT --prefix=$TOOLS \
-		--disable-nls --disable-shared --disable-multilib \
-		--disable-decimal-float --disable-threads \
-		--disable-libmudflap --disable-libssp \
-		--disable-libgomp --disable-libquadmath \
-        --disable-target-libiberty --disable-target-zlib \
-		--enable-languages=c --without-ppl --without-cloog \
+		--target=$LFS_TGT \
+		--prefix=$TOOLS \
+		--disable-nls \
+		--disable-shared \
+		--disable-multilib \
+		--disable-decimal-float \
+		--disable-threads \
+		--disable-libmudflap \
+		--disable-libssp \
+		--disable-libgomp \
+		--disable-libquadmath \
+		--disable-target-libiberty \
+		--disable-target-zlib \
+		--enable-languages=c \
+		--without-ppl \
+		--without-cloog \
 		--with-mpfr-include=$(pwd)/../gcc-4.6.2/mpfr/src \
 		--with-mpfr-lib=$(pwd)/mpfr/src/.libs
 }

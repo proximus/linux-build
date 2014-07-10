@@ -3,88 +3,51 @@ PACKAGE=''
 # Download all sources.
 plain_commands()
 { :
-	# Define urls to source packages and patches
-	urls=(
-        #file://${PROGDIR}/packages/test/test-1.0.tar.gz
-        http://ftp.gnu.org/gnu/binutils/binutils-2.22.tar.bz2
-        http://ftp.gnu.org/gnu/gcc/gcc-4.6.2/gcc-4.6.2.tar.bz2
-        http://www.mpfr.org/mpfr-3.1.0/mpfr-3.1.0.tar.bz2
-        http://ftp.gnu.org/gnu/gmp/gmp-5.0.4.tar.xz
-        http://www.multiprecision.org/mpc/download/mpc-0.9.tar.gz
-        http://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.6.tar.xz
-        http://ftp.gnu.org/gnu/glibc/glibc-2.14.1.tar.bz2
-        http://prdownloads.sourceforge.net/tcl/tcl8.5.11-src.tar.gz
-        http://prdownloads.sourceforge.net/expect/expect5.45.tar.gz
-        http://ftp.gnu.org/gnu/dejagnu/dejagnu-1.5.tar.gz
-        http://sourceforge.net/projects/check/files/check/0.9.8/check-0.9.8.tar.gz
-        ftp://ftp.gnu.org/gnu/ncurses/ncurses-5.9.tar.gz
-        http://ftp.gnu.org/gnu/bash/bash-4.2.tar.gz
-        http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz
-        http://ftp.gnu.org/gnu/coreutils/coreutils-8.15.tar.xz
-        http://ftp.gnu.org/gnu/diffutils/diffutils-3.2.tar.gz
-        ftp://ftp.astron.com/pub/file/file-5.10.tar.gz
-        http://ftp.gnu.org/gnu/findutils/findutils-4.4.2.tar.gz
-        http://ftp.gnu.org/gnu/gawk/gawk-4.0.0.tar.bz2
-        http://ftp.gnu.org/gnu/gettext/gettext-0.18.1.1.tar.gz
-        http://ftp.gnu.org/gnu/grep/grep-2.10.tar.xz
-        http://ftp.gnu.org/gnu/gzip/gzip-1.4.tar.gz
-        http://ftp.gnu.org/gnu/m4/m4-1.4.16.tar.bz2
-        http://ftp.gnu.org/gnu/make/make-3.82.tar.bz2
-        http://ftp.gnu.org/gnu/patch/patch-2.6.1.tar.bz2
-        http://www.cpan.org/src/5.0/perl-5.14.2.tar.bz2
-        http://ftp.gnu.org/gnu/sed/sed-4.2.1.tar.bz2
-        http://ftp.gnu.org/gnu/tar/tar-1.26.tar.bz2
-        http://ftp.gnu.org/gnu/texinfo/texinfo-4.13a.tar.gz
-        http://tukaani.org/xz/xz-5.0.3.tar.bz2
-        http://www.linuxfromscratch.org/patches/lfs/7.1/gcc-4.6.2-cross_compile-1.patch
-        http://www.linuxfromscratch.org/patches/lfs/7.1/glibc-2.14.1-gcc_fix-1.patch
-        http://www.linuxfromscratch.org/patches/lfs/7.1/glibc-2.14.1-cpuid-1.patch
-        http://www.linuxfromscratch.org/patches/lfs/7.1/gcc-4.6.2-startfiles_fix-1.patch
-        http://www.linuxfromscratch.org/patches/lfs/7.1/bash-4.2-fixes-4.patch
-        http://www.linuxfromscratch.org/patches/lfs/7.1/perl-5.14.2-libc-1.patch
-        https://raw.github.com/proximus/misc-code/master/patches/gcc-4.6.2-gengtype.patch
-	)
 
-	# Define md5sum to verify healthy source code.
-	md5_sums=(
-        #b1eba5f503d372d297d2d8f71105ca7d
-        ee0f10756c84979622b992a4a61ea3f5
-        028115c4fbfb6cfd75d6369f4a90d87e
-        238ae4a15cc3a5049b723daef5d17938
-        0881f4ff2617226c673fc534ac39d448
-        0d6acab8d214bd7d1fbbc593e83dd00d
-        b50e258e601a428d13bdcc9ae35f8340
-        5869a2620c6917dd392289864c6ce595
-        b01a9691c83990b3db0ce62d1012ca67
-        44e1a4f4c877e9ddc5a542dfa7ecc92b
-        3df1cbca885e751e22d3ebd1ac64dc3c
-        5d75e9a6027cde79d2c339ef261e7470
-        8cb9c412e5f2d96bc6f459aa8c6282a1
-        3fb927c7c33022f1c327f14a81c0d4b0
-        00b516f4704d4a7cb50a1d97e6e8e15b
-        094909fafa86110140b32e4948941545
-        22e4deef5d8949a727b159d6bc65c1cc
-        4cea34b087b060772511e066e2038196
-        351cc4adb07d54877fa15f75fb77d39f
-        7cdc48e99b885a4bbe0e98dcf1706b22
-        3dd55b952826d2b32f51308f2f91aa89
-        709915434d09f5db655e5ebd7fd6bb7f
-        e381b8506210c794278f5527cba0e765
-        8a7cef47fecab6272eb86a6be6363b2f
-        1a11100f3c63fcf5753818e59d63088f
-        0818d1763ae0c4281bcdc63cdac0b2c0
-        04a4c5d3c1f9f19d77daff8e8cd19a26
-        7d310fbd76e01a01115075c1fd3f455a
-        2cee42a2ff4f1cd4f9298eeeb2264519
-        71ba711519209b5fb583fed2b3d86fcb
-        8d900b742b94fa9e708ca4f5a4b29003
-        1b7886a7a4df3a48617e88a481862264
-        d1f28cb98acb9417fe52596908bbb9fd
-        4f110dc9c8d4754fbda841492ce796b4
-        799ef1971350d2e3c794f2123f247cc6
-        244e3ff74d53792f1db32dea75dc8627
-        23682f20b6785e97f99d33be7719c9d6
-        9d0f57b0c9a68217b8e2b8aacfd457f8
+	# Create an associative array
+	declare -A url
+
+	# Define md5sums and urls to verify healthy files
+	url=(
+		["b1eba5f503d372d297d2d8f71105ca7d"]="file://${PROGDIR}/packages/test/test-1.0.tar.gz"
+		["ee0f10756c84979622b992a4a61ea3f5"]="http://ftp.gnu.org/gnu/binutils/binutils-2.22.tar.bz2"
+		["028115c4fbfb6cfd75d6369f4a90d87e"]="http://ftp.gnu.org/gnu/gcc/gcc-4.6.2/gcc-4.6.2.tar.bz2"
+		["238ae4a15cc3a5049b723daef5d17938"]="http://www.mpfr.org/mpfr-3.1.0/mpfr-3.1.0.tar.bz2"
+		["0881f4ff2617226c673fc534ac39d448"]="http://ftp.gnu.org/gnu/gmp/gmp-5.0.4.tar.xz"
+		["0d6acab8d214bd7d1fbbc593e83dd00d"]="http://www.multiprecision.org/mpc/download/mpc-0.9.tar.gz"
+		["b50e258e601a428d13bdcc9ae35f8340"]="http://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.6.tar.xz"
+		["5869a2620c6917dd392289864c6ce595"]="http://ftp.gnu.org/gnu/glibc/glibc-2.14.1.tar.bz2"
+		["b01a9691c83990b3db0ce62d1012ca67"]="http://prdownloads.sourceforge.net/tcl/tcl8.5.11-src.tar.gz"
+		["44e1a4f4c877e9ddc5a542dfa7ecc92b"]="http://prdownloads.sourceforge.net/expect/expect5.45.tar.gz"
+		["3df1cbca885e751e22d3ebd1ac64dc3c"]="http://ftp.gnu.org/gnu/dejagnu/dejagnu-1.5.tar.gz"
+		["5d75e9a6027cde79d2c339ef261e7470"]="http://sourceforge.net/projects/check/files/check/0.9.8/check-0.9.8.tar.gz"
+		["8cb9c412e5f2d96bc6f459aa8c6282a1"]="ftp://ftp.gnu.org/gnu/ncurses/ncurses-5.9.tar.gz"
+		["3fb927c7c33022f1c327f14a81c0d4b0"]="http://ftp.gnu.org/gnu/bash/bash-4.2.tar.gz"
+		["00b516f4704d4a7cb50a1d97e6e8e15b"]="http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz"
+		["094909fafa86110140b32e4948941545"]="http://ftp.gnu.org/gnu/coreutils/coreutils-8.15.tar.xz"
+		["22e4deef5d8949a727b159d6bc65c1cc"]="http://ftp.gnu.org/gnu/diffutils/diffutils-3.2.tar.gz"
+		["4cea34b087b060772511e066e2038196"]="ftp://ftp.astron.com/pub/file/file-5.10.tar.gz"
+		["351cc4adb07d54877fa15f75fb77d39f"]="http://ftp.gnu.org/gnu/findutils/findutils-4.4.2.tar.gz"
+		["7cdc48e99b885a4bbe0e98dcf1706b22"]="http://ftp.gnu.org/gnu/gawk/gawk-4.0.0.tar.bz2"
+		["3dd55b952826d2b32f51308f2f91aa89"]="http://ftp.gnu.org/gnu/gettext/gettext-0.18.1.1.tar.gz"
+		["709915434d09f5db655e5ebd7fd6bb7f"]="http://ftp.gnu.org/gnu/grep/grep-2.10.tar.xz"
+		["e381b8506210c794278f5527cba0e765"]="http://ftp.gnu.org/gnu/gzip/gzip-1.4.tar.gz"
+		["8a7cef47fecab6272eb86a6be6363b2f"]="http://ftp.gnu.org/gnu/m4/m4-1.4.16.tar.bz2"
+		["1a11100f3c63fcf5753818e59d63088f"]="http://ftp.gnu.org/gnu/make/make-3.82.tar.bz2"
+		["0818d1763ae0c4281bcdc63cdac0b2c0"]="http://ftp.gnu.org/gnu/patch/patch-2.6.1.tar.bz2"
+		["04a4c5d3c1f9f19d77daff8e8cd19a26"]="http://www.cpan.org/src/5.0/perl-5.14.2.tar.bz2"
+		["7d310fbd76e01a01115075c1fd3f455a"]="http://ftp.gnu.org/gnu/sed/sed-4.2.1.tar.bz2"
+		["2cee42a2ff4f1cd4f9298eeeb2264519"]="http://ftp.gnu.org/gnu/tar/tar-1.26.tar.bz2"
+		["71ba711519209b5fb583fed2b3d86fcb"]="http://ftp.gnu.org/gnu/texinfo/texinfo-4.13a.tar.gz"
+		["8d900b742b94fa9e708ca4f5a4b29003"]="http://tukaani.org/xz/xz-5.0.3.tar.bz2"
+		["d6baad6cdc162302d4d32816c65a70fc"]="file://${PROGDIR}/packages/gcc/gcc-4.6.2-texinfo.patch"
+		["1b7886a7a4df3a48617e88a481862264"]="http://www.linuxfromscratch.org/patches/lfs/7.1/gcc-4.6.2-cross_compile-1.patch"
+		["d1f28cb98acb9417fe52596908bbb9fd"]="http://www.linuxfromscratch.org/patches/lfs/7.1/glibc-2.14.1-gcc_fix-1.patch"
+		["4f110dc9c8d4754fbda841492ce796b4"]="http://www.linuxfromscratch.org/patches/lfs/7.1/glibc-2.14.1-cpuid-1.patch"
+		["799ef1971350d2e3c794f2123f247cc6"]="http://www.linuxfromscratch.org/patches/lfs/7.1/gcc-4.6.2-startfiles_fix-1.patch"
+		["244e3ff74d53792f1db32dea75dc8627"]="http://www.linuxfromscratch.org/patches/lfs/7.1/bash-4.2-fixes-4.patch"
+		["23682f20b6785e97f99d33be7719c9d6"]="http://www.linuxfromscratch.org/patches/lfs/7.1/perl-5.14.2-libc-1.patch"
+		["9d0f57b0c9a68217b8e2b8aacfd457f8"]="https://raw.github.com/proximus/misc-code/master/patches/gcc-4.6.2-gengtype.patch"
 	)
 
 	# Create the SOURCES directory
@@ -93,20 +56,20 @@ plain_commands()
 	# Make the SOURCES directory writable and sticky
 	chmod -v a+wt "$SOURCES"
 
-    # Copy files to SOURCES depending on if the files are stored locally or if
-    # they need to be downloaded using wget.
-	for i in ${!urls[*]}; do
-        if [[ ${urls[$i]} =~ ^file:// ]]; then
-	        cp -v ${urls[$i]##file://} "$SOURCES"
-        else
-	        wget -nc ${urls[$i]} -P "$SOURCES"
-        fi
-    done
+	# Copy files to SOURCES depending on if the files are stored locally or if
+	# they need to be downloaded using wget.
+	for md5sum in "${!url[@]}"; do
+		if [[ ${url[$md5sum]} =~ ^file:// ]]; then
+			cp -v ${url[$md5sum]##file://} "$SOURCES"
+		else
+			wget -nc ${url[$md5sum]} -P "$SOURCES"
+		fi
+	done
 
 	# Check if packages are healthy. Exit if computed checksum did NOT match.
-	pushd  "$SOURCES"
-	for i in ${!md5_sums[*]}; do
-		echo "${md5_sums[$i]}  ${urls[$i]##*/}" | md5sum -c - || exit 1
+	pushd	"$SOURCES"
+	for md5sum in "${!url[@]}"; do
+		echo "${md5sum}  ${url[$md5sum]##*/}" | md5sum -c - || exit 1
 	done
 	popd
 }
