@@ -28,7 +28,6 @@
 #===============================================================================
 # Global variables (immutable)
 #===============================================================================
-
 # Set the program file name
 readonly PROGNAME=$(basename $0)
 
@@ -39,7 +38,9 @@ readonly PROGDIR=$(readlink -m $(dirname $0))
 # Save all the program arguments
 readonly ARGS="$@"
 
-LFS=${PROGDIR}/lfs                          # Set the LFS variable
+# Set the LFS variable
+LFS=${PROGDIR}/lfs
+
 TOOLS=/tmp/tools                            # Set the TOOLS variable
 SOURCES=$LFS/usr/src/sources                # Set the SOURCES variable
 LOGDIR=""                                   # Set the LOGDIR dynamically
