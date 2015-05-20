@@ -29,23 +29,23 @@ function print_usage()
     local program_name=$1
 
     cat <<- EOF
-Usage: $program_name [-f <component file>] [-d] [-h] [-e] [-t] [component list]
+Usage: $program_name [-f <recipe file>] [-d] [-h] [-e] [-t] [recipe list]
 
 Build Linux From Scratch (LFS) distribution
 
 Options:
-    -f,         Load component config file
+    -f,         Load recipe config file
     -d,         Run in debug mode
     -h,         Print help message
     -e,         Print the chroot environment
-    -t,         Build toolchain from component list or file
+    -t,         Build toolchain from recipe list or file
 
 Example:
 	Run all files:
     	./$program_name -t conf/lfs-7.1-tools.cfg
 
 	Run one file:
-    	./$program_name -t -f components/lfs-7.1/chapter3/3.0-Packages-and-Patches
+    	./$program_name -t -f recipes/lfs-7.1/chapter3/3.0-Packages-and-Patches
 
 EOF
 }

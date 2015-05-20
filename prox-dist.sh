@@ -45,11 +45,11 @@ TOOLS=/tmp/tools                            # Set the TOOLS variable
 SOURCES=$LFS/usr/src/sources                # Set the SOURCES variable
 LOGDIR=""                                   # Set the LOGDIR dynamically
 
-component_list=                             # Init list of components to zero
-component_file=                             # Init build component to zero
+recipe_list=                                # Init list of recipes to zero
+recipe_file=                                # Init build recipe to zero
 env_chroot="false"                          # Default is not to print chroot env
 env_toolchain="false"                       # Default is not to build toolchain
-component_file_defined="false"
+recipe_file_defined="false"
 
 source lib/functions.sh                     # Import functions from library
 source lib/build.sh                         # Import the build functions
@@ -65,8 +65,8 @@ while getopts ':def:ht-' opt; do
             echo "$0 Error: Component file \"$OPTARG\" does not exist" >&2
             exit 1
         fi
-        component_file_defined="true"
-        component_file="$OPTARG"
+        recipe_file_defined="true"
+        recipe_file="$OPTARG"
         ;;
     h)
         print_usage $PROGNAME
@@ -89,24 +89,24 @@ done
 # Decrements the argument pointer so it points to next argument
 shift $(($OPTIND - 1))
 # $1 now refer to the first non-option item supplied on the command-line
-component_list="$1"
+recipe_list="$1"
 
-if [ "$component_file_defined=" = "true" ] && [ ! -f "$component_file" ]; then
-    echo "$0 Error: Component file \"$component_file\" does not exist" >&2
+if [ "$recipe_file_defined=" = "true" ] && [ ! -f "$recipe_file" ]; then
+    echo "$0 Error: Component file \"$recipe_file\" does not exist" >&2
     exit 1
 fi
 
 # Check if the optional file argument has been typed
-if [ "$component_file_defined=" = "true" ]; then
+if [ "$recipe_file_defined=" = "true" ]; then
     if [ ! -f "$OPTARG" ]; then
         echo "$0 Error: Component file \"$OPTARG\" does not exist" >&2
         exit 1
     fi
 fi
 
-# Check if component file is not defined and that the component list exists
-if [ ! -f "$component_list" ] && [ -z "$component_file" ]; then
-    echo "$0 Error: Component list \"$component_list\" does not exist";
+# Check if recipe file is not defined and that the recipe list exists
+if [ ! -f "$recipe_list" ] && [ -z "$recipe_file" ]; then
+    echo "$0 Error: Component list \"$recipe_list\" does not exist";
     exit 1
 fi
 
@@ -130,28 +130,28 @@ else
 fi
 
 # Load config file into array and remove comments and other things we don't need
-component_array=()
-if [ "$component_list" ]; then
+recipe_array=()
+if [ "$recipe_list" ]; then
     while read line; do
-        component_array+=(${line/\#*/})
-    done < "$component_list"
+        recipe_array+=(${line/\#*/})
+    done < "$recipe_list"
 fi
-# Append component file given from command line
-component_array+=(${component_file})
+# Append recipe file given from command line
+recipe_array+=(${recipe_file})
 
 # Start building
-for component in ${component_array[@]}; do
+for recipe in ${recipe_array[@]}; do
     # Set the log directory
-    LOGDIR="$SOURCES/log/${component##*/}" && /bin/mkdir -p "$LOGDIR" || exit 1
+    LOGDIR="$SOURCES/log/${recipe##*/}" && /bin/mkdir -p "$LOGDIR" || exit 1
 
     # Print the script
     echo "================================================================================"
-    echo "Running: ${component}"
+    echo "Running: ${recipe}"
     echo "Log dir: ${LOGDIR}"
     echo "================================================================================"
 
     # Run the actual package build scipt
-    source $(eval echo "$component")
+    source $(eval echo "$recipe")
 done
 
 echo "================================================================================"
